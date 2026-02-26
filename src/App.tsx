@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { 
   Shield, 
@@ -14,8 +14,24 @@ import {
   Briefcase,
   ChevronRight,
   Github,
-  Globe
+  Globe,
+  Star,
+  GitFork,
+  Lock
 } from "lucide-react";
+
+const GITHUB_USERNAME = "Ghostalex07"; // Guessing based on email/context, user can adjust
+
+interface Repo {
+  id: number;
+  name: string;
+  description: string;
+  html_url: string;
+  stargazers_count: number;
+  forks_count: number;
+  language: string;
+  topics: string[];
+}
 
 const SectionTitle = ({ title, icon: Icon }: { title: string; icon: any }) => (
   <div className="flex items-center gap-3 mb-8 border-b border-cyber-green/20 pb-2">
@@ -34,6 +50,26 @@ const Card = ({ children, className = "" }: { children: React.ReactNode; classNa
 );
 
 export default function App() {
+  const [repos, setRepos] = useState<Repo[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchRepos = async () => {
+      try {
+        const response = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=6`);
+        if (response.ok) {
+          const data = await response.json();
+          setRepos(data);
+        }
+      } catch (error) {
+        console.error("Error fetching GitHub repos:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchRepos();
+  }, []);
+
   const skills = [
     { name: "Java", category: "Backend" },
     { name: "Python", category: "Scripting/AI" },
@@ -54,30 +90,9 @@ export default function App() {
     { title: "Microsoft SC-900", issuer: "Microsoft", desc: "Security, Compliance, and Identity Fundamentals" },
     { title: "MS-900", issuer: "Microsoft", desc: "Microsoft 365 Fundamentals" },
     { title: "AI & Critical Thinking", issuer: "Planeta Formación", desc: "Advanced AI concepts" },
-    { title: "Hackathon Internacional", issuer: "UPSA", desc: "Digital solutions challenge" },
-    { title: "Academia AWS", issuer: "Amazon Web Services", desc: "Cloud computing fundamentals" },
-    { title: "Academia Experis", issuer: "Experis", desc: "Soft skills & Professional development" },
-  ];
-
-  const projects = [
-    {
-      title: "MIPS Processor Simulator",
-      desc: "A detailed simulator for MIPS architecture, focusing on instruction execution and memory management.",
-      tags: ["C", "Assembly", "Architecture"],
-      icon: <Cpu className="w-8 h-8 text-cyber-blue" />
-    },
-    {
-      title: "Text-Based Game Engine",
-      desc: "A custom engine for narrative-driven text games with complex state management and branching paths.",
-      tags: ["Python", "Logic", "GameDev"],
-      icon: <Terminal className="w-8 h-8 text-cyber-green" />
-    },
-    {
-      title: "Cybersecurity Lab Environment",
-      desc: "Virtual laboratory setups for testing network security, penetration testing, and vulnerability assessment.",
-      tags: ["Docker", "Networking", "Security"],
-      icon: <Shield className="w-8 h-8 text-purple-500" />
-    }
+    { title: "International Hackathon", issuer: "UPSA", desc: "Digital solutions challenge" },
+    { title: "AWS Academy", issuer: "Amazon Web Services", desc: "Cloud computing fundamentals" },
+    { title: "Experis Academy", issuer: "Experis", desc: "Soft skills & Professional development" },
   ];
 
   return (
@@ -100,6 +115,9 @@ export default function App() {
           <div className="flex gap-4">
             <a href="https://www.linkedin.com/in/alejandroblancojimenez/" target="_blank" rel="noreferrer">
               <Linkedin className="w-5 h-5 hover:text-cyber-blue transition-colors" />
+            </a>
+            <a href={`https://github.com/${GITHUB_USERNAME}`} target="_blank" rel="noreferrer">
+              <Github className="w-5 h-5 hover:text-white transition-colors" />
             </a>
             <a href="mailto:Alejandro.bj007@gmail.com">
               <Mail className="w-5 h-5 hover:text-cyber-green transition-colors" />
@@ -124,8 +142,8 @@ export default function App() {
             </h1>
             <p className="text-xl md:text-2xl text-gray-400 max-w-2xl font-light leading-relaxed">
               Computer Engineering student at <span className="text-white font-medium">UNIE Universidad</span>. 
-              Specializing in <span className="text-cyber-blue font-medium">Cybersecurity</span>, 
-              Cloud Infrastructure, and AI.
+              While I have experience in <span className="text-cyber-blue font-medium">Cloud Infrastructure</span>, 
+              my true passion lies in <span className="text-cyber-green font-medium">Cybersecurity</span> and Digital Defense.
             </p>
             
             <div className="mt-10 flex flex-wrap gap-4">
@@ -137,6 +155,10 @@ export default function App() {
                 <Globe className="w-4 h-4 text-cyber-blue" />
                 Spanish (Native) / English (Advanced)
               </div>
+              <div className="flex items-center gap-2 text-sm font-mono bg-cyber-green/10 text-cyber-green px-4 py-2 rounded-full border border-cyber-green/20">
+                <Lock className="w-4 h-4" />
+                Cybersecurity Focused
+              </div>
             </div>
           </motion.div>
         </section>
@@ -144,15 +166,16 @@ export default function App() {
         {/* About / Education */}
         <section id="about" className="grid md:grid-rows-1 md:grid-cols-2 gap-12">
           <div>
-            <SectionTitle title="Summary" icon={Terminal} />
+            <SectionTitle title="Mission Brief" icon={Terminal} />
             <p className="text-lg text-gray-400 leading-relaxed mb-6">
-              Ingeniero Informático con sede en Madrid, con sólidos conocimientos en Java, Python y C. 
-              Apasionado tanto por el fitness como por el mundo de la informática, aportando disciplina, 
-              constancia y una mentalidad de mejora continua a cada proyecto.
+              Computer Engineer based in Madrid with strong knowledge in Java, Python, and C. 
+              I bring discipline, consistency, and a continuous improvement mindset to every project, 
+              inspired by my dedication to fitness and technology.
             </p>
             <p className="text-lg text-gray-400 leading-relaxed">
-              Enfocado en arquitecturas de software, computación en la nube (AWS/Azure), 
-              blockchain, ciberseguridad e IA.
+              My core focus is on <span className="text-white">Cybersecurity</span>, secure software architectures, 
+              and threat analysis. I leverage my background in Cloud (AWS/Azure) to build 
+              resilient and protected digital environments.
             </p>
           </div>
           <div>
@@ -162,10 +185,10 @@ export default function App() {
                 <div className="absolute -left-[5px] top-0 w-[9px] h-[9px] bg-cyber-green rounded-full shadow-[0_0_10px_#00ff41]" />
                 <h3 className="text-xl font-bold">UNIE Universidad</h3>
                 <p className="text-cyber-green font-mono text-sm">2023 — 2027</p>
-                <p className="text-gray-400 mt-2">Licenciatura en Ingeniería Informática</p>
+                <p className="text-gray-400 mt-2">Bachelor's Degree in Computer Engineering</p>
                 <ul className="mt-2 text-sm text-gray-500 space-y-1">
+                  <li>• Cybersecurity & Blockchain Specialization</li>
                   <li>• Cloud Computing (AWS/Azure)</li>
-                  <li>• Cybersecurity & Blockchain</li>
                   <li>• AI & Data Analysis</li>
                 </ul>
               </div>
@@ -173,7 +196,7 @@ export default function App() {
                 <div className="absolute -left-[5px] top-0 w-[9px] h-[9px] bg-white/20 rounded-full" />
                 <h3 className="text-xl font-bold">Colegio Nuestra Señora de la Merced</h3>
                 <p className="text-gray-500 font-mono text-sm">2021 — 2023</p>
-                <p className="text-gray-400 mt-2">Bachillerato Tecnológico</p>
+                <p className="text-gray-400 mt-2">Technological Baccalaureate</p>
               </div>
             </div>
           </div>
@@ -181,11 +204,11 @@ export default function App() {
 
         {/* Experience */}
         <section id="experience">
-          <SectionTitle title="Experience" icon={Briefcase} />
+          <SectionTitle title="Field Experience" icon={Briefcase} />
           <Card className="relative overflow-hidden">
             <div className="flex flex-col md:flex-row md:justify-between md:items-start mb-4">
               <div>
-                <h3 className="text-2xl font-bold text-white">Especialista en TI</h3>
+                <h3 className="text-2xl font-bold text-white">IT Specialist</h3>
                 <p className="text-cyber-green font-mono">RTTC</p>
               </div>
               <p className="text-gray-500 font-mono text-sm mt-2 md:mt-0">01/2024 — 03/2025</p>
@@ -193,11 +216,11 @@ export default function App() {
             <ul className="space-y-3 text-gray-400">
               <li className="flex gap-3">
                 <ChevronRight className="w-5 h-5 text-cyber-green shrink-0" />
-                <span>Resolvió problemas técnicos complejos y modernizó hardware y sistemas anticuados.</span>
+                <span>Resolved complex technical issues and modernized legacy hardware and systems.</span>
               </li>
               <li className="flex gap-3">
                 <ChevronRight className="w-5 h-5 text-cyber-green shrink-0" />
-                <span>Optimización de procesos de infraestructura y soporte técnico especializado.</span>
+                <span>Optimized infrastructure processes and provided specialized technical support.</span>
               </li>
             </ul>
           </Card>
@@ -220,27 +243,71 @@ export default function App() {
           </div>
         </section>
 
-        {/* Projects */}
+        {/* Projects (Dynamic from GitHub) */}
         <section id="projects">
-          <SectionTitle title="Featured Projects" icon={Cpu} />
-          <div className="grid md:grid-cols-3 gap-8">
-            {projects.map((project) => (
-              <Card key={project.title} className="flex flex-col h-full">
-                <div className="mb-6">{project.icon}</div>
-                <h3 className="text-xl font-bold mb-3">{project.title}</h3>
-                <p className="text-gray-400 text-sm mb-6 flex-grow leading-relaxed">
-                  {project.desc}
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {project.tags.map(tag => (
-                    <span key={tag} className="text-[10px] font-mono bg-white/5 px-2 py-1 rounded border border-white/10 text-gray-400">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </Card>
-            ))}
+          <div className="flex justify-between items-end mb-8 border-b border-cyber-green/20 pb-2">
+            <div className="flex items-center gap-3">
+              <Github className="text-cyber-green w-6 h-6" />
+              <h2 className="text-2xl font-bold uppercase tracking-widest">Live Repositories</h2>
+            </div>
+            <a 
+              href={`https://github.com/${GITHUB_USERNAME}`} 
+              target="_blank" 
+              rel="noreferrer"
+              className="text-xs font-mono text-gray-500 hover:text-cyber-green transition-colors flex items-center gap-1 mb-1"
+            >
+              View all <ExternalLink className="w-3 h-3" />
+            </a>
           </div>
+
+          {loading ? (
+            <div className="grid md:grid-cols-3 gap-8">
+              {[1, 2, 3].map(i => (
+                <div key={i} className="h-48 bg-white/5 animate-pulse rounded-lg border border-white/5"></div>
+              ))}
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-3 gap-8">
+              {repos.length > 0 ? (
+                repos.map((repo) => (
+                  <Card key={repo.id} className="flex flex-col h-full">
+                    <div className="flex justify-between items-start mb-4">
+                      <Terminal className="w-6 h-6 text-cyber-green" />
+                      <div className="flex gap-3 text-xs font-mono text-gray-500">
+                        <span className="flex items-center gap-1"><Star className="w-3 h-3" /> {repo.stargazers_count}</span>
+                        <span className="flex items-center gap-1"><GitFork className="w-3 h-3" /> {repo.forks_count}</span>
+                      </div>
+                    </div>
+                    <h3 className="text-lg font-bold mb-2 truncate text-white group-hover:text-cyber-green transition-colors">
+                      {repo.name}
+                    </h3>
+                    <p className="text-gray-400 text-xs mb-6 flex-grow leading-relaxed line-clamp-3">
+                      {repo.description || "No description provided for this repository."}
+                    </p>
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {repo.language && (
+                        <span className="text-[10px] font-mono bg-cyber-blue/10 px-2 py-1 rounded border border-cyber-blue/20 text-cyber-blue">
+                          {repo.language}
+                        </span>
+                      )}
+                    </div>
+                    <a 
+                      href={repo.html_url} 
+                      target="_blank" 
+                      rel="noreferrer"
+                      className="text-xs font-mono text-cyber-green flex items-center gap-1 hover:underline"
+                    >
+                      Source Code <ExternalLink className="w-3 h-3" />
+                    </a>
+                  </Card>
+                ))
+              ) : (
+                <div className="col-span-full text-center py-12 border border-dashed border-white/10 rounded-lg">
+                  <p className="text-gray-500 font-mono">No public repositories found for {GITHUB_USERNAME}.</p>
+                </div>
+              )}
+            </div>
+          )}
         </section>
 
         {/* Certifications */}
@@ -266,8 +333,8 @@ export default function App() {
         <footer className="pt-24 pb-12 border-t border-white/5">
           <div className="flex flex-col md:flex-row justify-between items-center gap-8">
             <div>
-              <h2 className="text-3xl font-bold mb-2">Let's Connect</h2>
-              <p className="text-gray-500 font-mono">Ready for the next security challenge.</p>
+              <h2 className="text-3xl font-bold mb-2">Initialize Contact</h2>
+              <p className="text-gray-500 font-mono">Secure connection ready. Awaiting input...</p>
             </div>
             <div className="flex gap-6">
               <a 
@@ -289,7 +356,7 @@ export default function App() {
             </div>
           </div>
           <div className="mt-24 text-center text-gray-600 text-xs font-mono uppercase tracking-widest">
-            &copy; {new Date().getFullYear()} Alejandro Blanco // Built with React & Tailwind
+            &copy; {new Date().getFullYear()} Alejandro Blanco // Secure Portfolio v2.0
           </div>
         </footer>
 
