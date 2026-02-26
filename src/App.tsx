@@ -59,7 +59,11 @@ export default function App() {
         const response = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=6`);
         if (response.ok) {
           const data = await response.json();
-          setRepos(data);
+          if (Array.isArray(data)) {
+            setRepos(data);
+          } else {
+            console.error("GitHub API returned non-array data:", data);
+          }
         }
       } catch (error) {
         console.error("Error fetching GitHub repos:", error);
