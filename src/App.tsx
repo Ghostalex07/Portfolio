@@ -20,7 +20,7 @@ import {
   Lock
 } from "lucide-react";
 
-const GITHUB_USERNAME = "Ghostalex07"; // Guessing based on email/context, user can adjust
+const GITHUB_USERNAME = "Ghostalex07";
 
 interface Repo {
   id: number;
@@ -142,8 +142,8 @@ export default function App() {
             </h1>
             <p className="text-xl md:text-2xl text-gray-400 max-w-2xl font-light leading-relaxed">
               Computer Engineering student at <span className="text-white font-medium">UNIE Universidad</span>. 
-              While I have experience in <span className="text-cyber-blue font-medium">Cloud Infrastructure</span>, 
-              my true passion lies in <span className="text-cyber-green font-medium">Cybersecurity</span> and Digital Defense.
+              Specializing in <span className="text-cyber-green font-medium">Cybersecurity</span> and Digital Defense. 
+              I build secure architectures and analyze threats to protect the digital frontier.
             </p>
             
             <div className="mt-10 flex flex-wrap gap-4">
