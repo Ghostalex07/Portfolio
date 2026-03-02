@@ -29,6 +29,12 @@
           <div style="width: 200px; height: 2px; background: #1a1a1a; margin: 0 auto; position: relative; overflow: hidden;">
             <div style="position: absolute; width: 50px; height: 100%; background: #00ff41; animation: loading 2s infinite linear;"></div>
           </div>
+          <div id="debug-info" style="margin-top: 20px; font-size: 10px; color: #666; cursor: pointer;" onclick="this.innerText = 'URL: ' + window.location.href + '\nPath: ' + window.location.pathname">
+            [SYSTEM_INFO]
+          </div>
+          <div style="margin-top: 10px;">
+            <a href="." style="color: #00ff41; font-size: 12px; text-decoration: underline;">RELOAD_SYSTEM</a>
+          </div>
         </div>
       </div>
     </div>
@@ -38,7 +44,7 @@
         100% { left: 200px; }
       }
     </style>
-    <script type="module" src="./src/main.tsx"></script>
+    <script type="module" src="src/main.tsx"></script>
   </body>
 </html>
 
