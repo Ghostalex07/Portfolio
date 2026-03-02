@@ -1,20 +1,22 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Alejandro Blanco - Cybersecurity Portfolio
 
-# Run and deploy your AI Studio app
+Este proyecto está configurado con **GitHub Actions** para que se despliegue automáticamente.
 
-This contains everything you need to run your app locally.
+## 🚀 Despliegue Automático (Sin Terminal)
 
-View your app in AI Studio: https://ai.studio/apps/47d4b7b4-009e-4cdc-82a3-44da5c7496ba
+No necesitas usar la terminal para publicar los cambios. Todo funciona de la siguiente manera:
 
-## Run Locally
+1.  **Sincroniza tus cambios**: Cuando guardas o sincronizas tus cambios desde este editor hacia tu repositorio de GitHub en la rama `main`.
+2.  **GitHub Actions se activa**: Automáticamente, GitHub detectará el cambio y ejecutará un "Workflow" (puedes verlo en la pestaña **Actions** de tu repositorio en GitHub).
+3.  **Construcción y Publicación**: GitHub instalará las dependencias, compilará el proyecto y lo publicará en la rama `gh-pages` por ti.
+4.  **Listo**: En un par de minutos, los cambios estarán vivos en `https://Ghostalex07.github.io/Portfolio/`.
 
-**Prerequisites:**  Node.js
+## 🛠️ Configuración Incluida
 
+- **Vite Config**: Configurado para la ruta `/Portfolio/`.
+- **404 Fallback**: Manejo de rutas para evitar errores al recargar.
+- **NoJekyll**: Asegura que GitHub no interfiera con los archivos de CSS/JS.
+- **Workflow**: Ubicado en `.github/workflows/deploy.yml`.
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+---
+*Desarrollado con enfoque en Ciberseguridad y Rendimiento.*
