@@ -7,28 +7,50 @@
   
   --color-cyber-green: #00ff41;
   --color-cyber-blue: #00f0ff;
-  --color-cyber-dark: #0a0a0a;
-  --color-cyber-gray: #1a1a1a;
+  --color-cyber-dark: var(--bg-main);
+  --color-cyber-gray: var(--bg-card);
+}
+
+:root {
+  --bg-main: #0a0a0a;
+  --bg-card: #1a1a1a;
+  --text-primary: #ffffff;
+  --text-secondary: #9ca3af;
+  --border-color: rgba(255, 255, 255, 0.05);
+  --grid-color: rgba(0, 255, 65, 0.05);
+}
+
+:root.light {
+  --bg-main: #f5f5f5;
+  --bg-card: #ffffff;
+  --text-primary: #1a1a1a;
+  --text-secondary: #4b5563;
+  --border-color: rgba(0, 0, 0, 0.05);
+  --grid-color: rgba(0, 255, 65, 0.1);
 }
 
 @layer base {
   body {
-    @apply bg-cyber-dark text-gray-300 font-sans selection:bg-cyber-green/30 selection:text-cyber-green;
+    @apply bg-cyber-dark text-[var(--text-secondary)] font-sans selection:bg-cyber-green/30 selection:text-cyber-green transition-colors duration-300;
   }
 
   h1, h2, h3, h4 {
-    @apply font-mono tracking-tight text-white;
+    @apply font-mono tracking-tight text-[var(--text-primary)];
   }
 }
 
 .cyber-grid {
-  background-image: linear-gradient(rgba(0, 255, 65, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 255, 65, 0.05) 1px, transparent 1px);
+  background-image: linear-gradient(var(--grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
   background-size: 40px 40px;
 }
 
 .glow-text {
   text-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+}
+
+:root.light .glow-text {
+  text-shadow: 0 0 5px rgba(0, 255, 65, 0.3);
 }
 
 .glow-border {
@@ -45,6 +67,12 @@
   position: absolute;
   bottom: 100%;
   animation: scanline 10s linear infinite;
+  pointer-events: none;
+}
+
+:root.light .scanline {
+  background: linear-gradient(0deg, rgba(255, 255, 255, 0) 0%, rgba(0, 255, 65, 0.1) 50%, rgba(255, 255, 255, 0) 100%);
+  opacity: 0.2;
 }
 
 @keyframes scanline {
