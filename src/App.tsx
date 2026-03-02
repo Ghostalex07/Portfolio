@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import { 
   Shield, 
   Terminal, 
@@ -19,7 +19,10 @@ import {
   GitFork,
   Lock,
   Menu,
-  X
+  X,
+  ChevronDown,
+  Copy,
+  Check
 } from "lucide-react";
 
 const GITHUB_USERNAME = "Ghostalex07";
@@ -35,12 +38,67 @@ interface Repo {
   topics: string[];
 }
 
-const SectionTitle = ({ title, icon: Icon }: { title: string; icon: any }) => (
-  <div className="flex items-center gap-3 mb-8 border-b border-cyber-green/20 pb-2">
-    <Icon className="text-cyber-green w-6 h-6" />
-    <h2 className="text-2xl font-bold uppercase tracking-widest">{title}</h2>
+const SectionTitle = ({ title, icon: Icon, isOpen, onToggle }: { title: string; icon: any; isOpen?: boolean; onToggle?: () => void }) => (
+  <div 
+    className="flex items-center justify-between mb-8 border-b border-cyber-green/20 pb-2 cursor-pointer group"
+    onClick={onToggle}
+  >
+    <div className="flex items-center gap-3">
+      <Icon className="text-cyber-green w-6 h-6 group-hover:scale-110 transition-transform" />
+      <h2 className="text-2xl font-bold uppercase tracking-widest group-hover:text-cyber-green transition-colors">{title}</h2>
+    </div>
+    {onToggle && (
+      <motion.div
+        animate={{ rotate: isOpen ? 180 : 0 }}
+        transition={{ duration: 0.3 }}
+      >
+        <ChevronDown className="text-cyber-green w-6 h-6" />
+      </motion.div>
+    )}
   </div>
 );
+
+const CollapsibleSection = ({ 
+  id, 
+  title, 
+  icon, 
+  children, 
+  defaultOpen = true 
+}: { 
+  id: string; 
+  title: string; 
+  icon: any; 
+  children: React.ReactNode;
+  defaultOpen?: boolean;
+}) => {
+  const [isOpen, setIsOpen] = useState(defaultOpen);
+
+  return (
+    <section id={id} className="scroll-mt-24">
+      <SectionTitle 
+        title={title} 
+        icon={icon} 
+        isOpen={isOpen} 
+        onToggle={() => setIsOpen(!isOpen)} 
+      />
+      <AnimatePresence initial={false}>
+        {isOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="overflow-hidden"
+          >
+            <div className="pb-4">
+              {children}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </section>
+  );
+};
 
 const Card = ({ children, className = "" }: { children: React.ReactNode; className?: string; key?: string | number }) => (
   <motion.div 
@@ -55,6 +113,13 @@ export default function App() {
   const [repos, setRepos] = useState<Repo[]>([]);
   const [loading, setLoading] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const copyEmail = () => {
+    navigator.clipboard.writeText("Alejandro.bj007@gmail.com");
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   // Fallback projects in case GitHub API fails or is slow
   const fallbackProjects = [
@@ -158,8 +223,14 @@ export default function App() {
       {/* Navigation / Header */}
       <header className="sticky top-0 z-50 bg-cyber-dark/80 backdrop-blur-md border-b border-white/5">
         <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-          <div className="font-mono text-cyber-green font-bold text-xl tracking-tighter">
-            AB<span className="animate-pulse">_</span>
+          <div className="flex items-center gap-4">
+            <div className="font-mono text-cyber-green font-bold text-xl tracking-tighter">
+              AB<span className="animate-pulse">_</span>
+            </div>
+            <div className="hidden lg:flex items-center gap-2 px-3 py-1 bg-cyber-green/5 border border-cyber-green/20 rounded-full">
+              <div className="w-2 h-2 bg-cyber-green rounded-full animate-pulse"></div>
+              <span className="text-[10px] font-mono text-cyber-green uppercase tracking-tighter">Status: Active</span>
+            </div>
           </div>
           
           {/* Desktop Nav */}
@@ -295,8 +366,7 @@ export default function App() {
         </section>
 
         {/* Experience */}
-        <section id="experience">
-          <SectionTitle title="Experience" icon={Briefcase} />
+        <CollapsibleSection id="experience" title="Experience" icon={Briefcase}>
           <Card className="relative overflow-hidden">
             <div className="flex flex-col md:flex-row md:justify-between md:items-start mb-4">
               <div>
@@ -316,11 +386,10 @@ export default function App() {
               </li>
             </ul>
           </Card>
-        </section>
+        </CollapsibleSection>
 
         {/* Skills */}
-        <section id="skills">
-          <SectionTitle title="Technical Skills" icon={Code2} />
+        <CollapsibleSection id="skills" title="Technical Skills" icon={Code2}>
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
             {skills.map((skill) => (
               <motion.div
@@ -333,25 +402,10 @@ export default function App() {
               </motion.div>
             ))}
           </div>
-        </section>
+        </CollapsibleSection>
 
         {/* Projects (Dynamic from GitHub) */}
-        <section id="projects">
-          <div className="flex justify-between items-end mb-8 border-b border-cyber-green/20 pb-2">
-            <div className="flex items-center gap-3">
-              <Github className="text-cyber-green w-6 h-6" />
-              <h2 className="text-2xl font-bold uppercase tracking-widest">Projects</h2>
-            </div>
-            <a 
-              href={`https://github.com/${GITHUB_USERNAME}`} 
-              target="_blank" 
-              rel="noreferrer"
-              className="text-xs font-mono text-gray-500 hover:text-cyber-green transition-colors flex items-center gap-1 mb-1"
-            >
-              View all <ExternalLink className="w-3 h-3" />
-            </a>
-          </div>
-
+        <CollapsibleSection id="projects" title="Projects" icon={Github}>
           {loading ? (
             <div className="grid md:grid-cols-3 gap-8">
               {[1, 2, 3].map(i => (
@@ -400,11 +454,10 @@ export default function App() {
               )}
             </div>
           )}
-        </section>
+        </CollapsibleSection>
 
         {/* Certifications */}
-        <section id="certs">
-          <SectionTitle title="Certifications" icon={Award} />
+        <CollapsibleSection id="certs" title="Certifications" icon={Award}>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {certifications.map((cert) => (
               <div key={cert.title} className="flex gap-4 items-start p-4 border border-white/5 rounded-lg hover:bg-white/5 transition-colors">
@@ -419,7 +472,7 @@ export default function App() {
               </div>
             ))}
           </div>
-        </section>
+        </CollapsibleSection>
 
         {/* Contact / Footer */}
         <footer className="pt-24 pb-12 border-t border-white/5">
@@ -438,13 +491,13 @@ export default function App() {
                 <Linkedin className="w-4 h-4" />
                 LinkedIn
               </a>
-              <a 
-                href="mailto:Alejandro.bj007@gmail.com"
-                className="flex items-center justify-center gap-2 bg-cyber-green/10 text-cyber-green px-8 py-4 rounded-full hover:bg-cyber-green hover:text-white transition-all font-mono text-sm"
+              <button 
+                onClick={copyEmail}
+                className="flex items-center justify-center gap-2 bg-cyber-green/10 text-cyber-green px-8 py-4 rounded-full hover:bg-cyber-green hover:text-white transition-all font-mono text-sm group"
               >
-                <Mail className="w-4 h-4" />
-                Email
-              </a>
+                {copied ? <Check className="w-4 h-4" /> : <Mail className="w-4 h-4" />}
+                {copied ? "Copied!" : "Copy Email"}
+              </button>
             </div>
           </div>
           <div className="mt-24 text-center text-gray-600 text-xs font-mono uppercase tracking-widest">
