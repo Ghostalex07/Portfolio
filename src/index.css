@@ -5,8 +5,8 @@
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
   
-  --color-cyber-green: #00ff41;
-  --color-cyber-blue: #00f0ff;
+  --color-cyber-green: var(--cyber-green);
+  --color-cyber-blue: var(--cyber-blue);
   --color-cyber-dark: var(--bg-main);
   --color-cyber-gray: var(--bg-card);
 }
@@ -18,6 +18,8 @@
   --text-secondary: #9ca3af;
   --border-color: rgba(255, 255, 255, 0.05);
   --grid-color: rgba(0, 255, 65, 0.05);
+  --cyber-green: #00ff41;
+  --cyber-blue: #00f0ff;
 }
 
 :root.light {
@@ -27,6 +29,8 @@
   --text-secondary: #4b5563;
   --border-color: rgba(0, 0, 0, 0.05);
   --grid-color: rgba(0, 255, 65, 0.1);
+  --cyber-green: #008f23; /* Darker green for readability */
+  --cyber-blue: #0077cc;  /* Darker blue for readability */
 }
 
 @layer base {
@@ -46,24 +50,25 @@
 }
 
 .glow-text {
-  text-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+  text-shadow: 0 0 10px var(--cyber-green);
 }
 
 :root.light .glow-text {
-  text-shadow: 0 0 5px rgba(0, 255, 65, 0.3);
+  text-shadow: 0 0 5px var(--cyber-green);
+  opacity: 0.9;
 }
 
 .glow-border {
-  box-shadow: 0 0 15px rgba(0, 255, 65, 0.2);
-  border: 1px solid rgba(0, 255, 65, 0.3);
+  box-shadow: 0 0 15px var(--cyber-green);
+  border: 1px solid var(--cyber-green);
 }
 
 .scanline {
   width: 100%;
   height: 100px;
   z-index: 10;
-  background: linear-gradient(0deg, rgba(0, 0, 0, 0) 0%, rgba(0, 255, 65, 0.05) 50%, rgba(0, 0, 0, 0) 100%);
-  opacity: 0.1;
+  background: linear-gradient(0deg, transparent 0%, var(--cyber-green) 50%, transparent 100%);
+  opacity: 0.05;
   position: absolute;
   bottom: 100%;
   animation: scanline 10s linear infinite;
@@ -71,8 +76,7 @@
 }
 
 :root.light .scanline {
-  background: linear-gradient(0deg, rgba(255, 255, 255, 0) 0%, rgba(0, 255, 65, 0.1) 50%, rgba(255, 255, 255, 0) 100%);
-  opacity: 0.2;
+  opacity: 0.1;
 }
 
 @keyframes scanline {
