@@ -17,7 +17,9 @@ import {
   Globe,
   Star,
   GitFork,
-  Lock
+  Lock,
+  Menu,
+  X
 } from "lucide-react";
 
 const GITHUB_USERNAME = "Ghostalex07";
@@ -52,6 +54,7 @@ const Card = ({ children, className = "" }: { children: React.ReactNode; classNa
 export default function App() {
   const [repos, setRepos] = useState<Repo[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // Fallback projects in case GitHub API fails or is slow
   const fallbackProjects = [
@@ -158,6 +161,8 @@ export default function App() {
           <div className="font-mono text-cyber-green font-bold text-xl tracking-tighter">
             AB<span className="animate-pulse">_</span>
           </div>
+          
+          {/* Desktop Nav */}
           <nav className="hidden md:flex gap-8 text-xs font-mono uppercase tracking-widest">
             <a href="#about" className="hover:text-cyber-green transition-colors">About</a>
             <a href="#experience" className="hover:text-cyber-green transition-colors">Experience</a>
@@ -165,35 +170,69 @@ export default function App() {
             <a href="#projects" className="hover:text-cyber-green transition-colors">Projects</a>
             <a href="#certs" className="hover:text-cyber-green transition-colors">Certs</a>
           </nav>
-          <div className="flex gap-4">
-            <a href="https://www.linkedin.com/in/alejandroblancojimenez/" target="_blank" rel="noreferrer">
-              <Linkedin className="w-5 h-5 hover:text-cyber-blue transition-colors" />
-            </a>
-            <a href={`https://github.com/${GITHUB_USERNAME}`} target="_blank" rel="noreferrer">
-              <Github className="w-5 h-5 hover:text-white transition-colors" />
-            </a>
-            <a href="mailto:Alejandro.bj007@gmail.com">
-              <Mail className="w-5 h-5 hover:text-cyber-green transition-colors" />
-            </a>
+
+          <div className="flex items-center gap-4">
+            <div className="hidden sm:flex gap-4">
+              <a href="https://www.linkedin.com/in/alejandroblancojimenez/" target="_blank" rel="noreferrer">
+                <Linkedin className="w-5 h-5 hover:text-cyber-blue transition-colors" />
+              </a>
+              <a href={`https://github.com/${GITHUB_USERNAME}`} target="_blank" rel="noreferrer">
+                <Github className="w-5 h-5 hover:text-white transition-colors" />
+              </a>
+            </div>
+            
+            {/* Mobile Menu Toggle */}
+            <button 
+              className="md:hidden text-cyber-green"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
+              {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
           </div>
         </div>
+
+        {/* Mobile Nav Overlay */}
+        {isMenuOpen && (
+          <motion.div 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="md:hidden bg-cyber-dark border-b border-white/5 px-6 py-8 space-y-6 font-mono text-sm uppercase tracking-widest"
+          >
+            <a href="#about" onClick={() => setIsMenuOpen(false)} className="block hover:text-cyber-green">About</a>
+            <a href="#experience" onClick={() => setIsMenuOpen(false)} className="block hover:text-cyber-green">Experience</a>
+            <a href="#skills" onClick={() => setIsMenuOpen(false)} className="block hover:text-cyber-green">Skills</a>
+            <a href="#projects" onClick={() => setIsMenuOpen(false)} className="block hover:text-cyber-green">Projects</a>
+            <a href="#certs" onClick={() => setIsMenuOpen(false)} className="block hover:text-cyber-green">Certs</a>
+            <div className="flex gap-6 pt-4 border-t border-white/5">
+              <a href="https://www.linkedin.com/in/alejandroblancojimenez/" target="_blank" rel="noreferrer">
+                <Linkedin className="w-5 h-5 text-cyber-blue" />
+              </a>
+              <a href={`https://github.com/${GITHUB_USERNAME}`} target="_blank" rel="noreferrer">
+                <Github className="w-5 h-5 text-white" />
+              </a>
+              <a href="mailto:Alejandro.bj007@gmail.com">
+                <Mail className="w-5 h-5 text-cyber-green" />
+              </a>
+            </div>
+          </motion.div>
+        )}
       </header>
 
-      <main className="max-w-6xl mx-auto px-6 py-12 space-y-32">
+      <main className="max-w-6xl mx-auto px-6 py-12 space-y-16 md:space-y-32">
         
         {/* Hero Section */}
-        <section className="pt-12 md:pt-24 flex flex-col items-start">
+        <section className="pt-8 md:pt-24 flex flex-col items-start">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
             <span className="font-mono text-cyber-green text-sm mb-4 block tracking-[0.3em] uppercase">Computer Engineering</span>
-            <h1 className="text-6xl md:text-8xl font-bold mb-6 leading-none tracking-tighter">
+            <h1 className="text-4xl sm:text-6xl md:text-8xl font-bold mb-6 leading-none tracking-tighter">
               ALEJANDRO <br />
               <span className="text-cyber-green glow-text">BLANCO</span>
             </h1>
-            <p className="text-xl md:text-2xl text-gray-400 max-w-2xl font-light leading-relaxed">
+            <p className="text-lg md:text-2xl text-gray-400 max-w-2xl font-light leading-relaxed">
               Student at <span className="text-white font-medium">UNIE Universidad</span>. 
               Focused on <span className="text-cyber-green font-medium">Cybersecurity</span> and software development. 
               I design secure systems and analyze vulnerabilities to build a safer digital environment.
@@ -385,23 +424,23 @@ export default function App() {
         {/* Contact / Footer */}
         <footer className="pt-24 pb-12 border-t border-white/5">
           <div className="flex flex-col md:flex-row justify-between items-center gap-8">
-            <div>
+            <div className="text-center md:text-left">
               <h2 className="text-3xl font-bold mb-2">Get in Touch</h2>
               <p className="text-gray-500 font-mono">Available for collaborations and professional inquiries.</p>
             </div>
-            <div className="flex gap-6">
+            <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 w-full sm:w-auto">
               <a 
                 href="https://www.linkedin.com/in/alejandroblancojimenez/" 
                 target="_blank" 
                 rel="noreferrer"
-                className="flex items-center gap-2 bg-cyber-blue/10 text-cyber-blue px-6 py-3 rounded-full hover:bg-cyber-blue hover:text-white transition-all font-mono text-sm"
+                className="flex items-center justify-center gap-2 bg-cyber-blue/10 text-cyber-blue px-8 py-4 rounded-full hover:bg-cyber-blue hover:text-white transition-all font-mono text-sm"
               >
                 <Linkedin className="w-4 h-4" />
                 LinkedIn
               </a>
               <a 
                 href="mailto:Alejandro.bj007@gmail.com"
-                className="flex items-center gap-2 bg-cyber-green/10 text-cyber-green px-6 py-3 rounded-full hover:bg-cyber-green hover:text-white transition-all font-mono text-sm"
+                className="flex items-center justify-center gap-2 bg-cyber-green/10 text-cyber-green px-8 py-4 rounded-full hover:bg-cyber-green hover:text-white transition-all font-mono text-sm"
               >
                 <Mail className="w-4 h-4" />
                 Email
