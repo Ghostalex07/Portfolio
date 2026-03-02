@@ -138,11 +138,12 @@ export default function App() {
   ];
 
   const certifications = [
+    { title: "Junior Cybersecurity Analyst", issuer: "Cisco", desc: "Foundations of cybersecurity operations and threat analysis" },
     { title: "Microsoft AZ-500", issuer: "Microsoft", desc: "Azure Security Technologies" },
     { title: "Microsoft SC-900", issuer: "Microsoft", desc: "Security, Compliance, and Identity Fundamentals" },
-    { title: "MS-900", issuer: "Microsoft", desc: "Microsoft 365 Fundamentals" },
+    { title: "Microsoft MS-900", issuer: "Microsoft", desc: "Microsoft 365 Fundamentals" },
     { title: "AI & Critical Thinking", issuer: "Planeta Formación", desc: "Advanced AI concepts" },
-    { title: "International Hackathon", issuer: "UPSA", desc: "Digital solutions challenge" },
+    { title: "International Hackathon", issuer: "Universidad Pontificia de Salamanca", desc: "Digital solutions challenge" },
     { title: "AWS Academy", issuer: "Amazon Web Services", desc: "Cloud computing fundamentals" },
     { title: "Experis Academy", issuer: "Experis", desc: "Soft skills & Professional development" },
   ];
