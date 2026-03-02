@@ -88,6 +88,15 @@ export default function App() {
   ];
 
   useEffect(() => {
+    // Safety timeout: if data doesn't load in 5 seconds, show fallbacks anyway
+    const timer = setTimeout(() => {
+      if (loading) {
+        console.warn("Data fetch timed out, using fallbacks.");
+        setRepos(fallbackProjects as any);
+        setLoading(false);
+      }
+    }, 5000);
+
     const fetchRepos = async () => {
       try {
         const response = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=6`);
@@ -106,9 +115,11 @@ export default function App() {
         setRepos(fallbackProjects as any);
       } finally {
         setLoading(false);
+        clearTimeout(timer);
       }
     };
     fetchRepos();
+    return () => clearTimeout(timer);
   }, []);
 
   const skills = [

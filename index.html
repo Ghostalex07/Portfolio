@@ -5,7 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Alejandro Blanco | Cybersecurity Portfolio</title>
     <script>
-      // Redirect to trailing slash if missing (important for GitHub Pages sub-paths)
+      // Error logging to help debug GitHub Pages issues
+      window.onerror = function(msg, url, lineNo, columnNo, error) {
+        console.error('System Error:', msg, url, lineNo, columnNo, error);
+        const root = document.getElementById('root');
+        if (root && root.innerText.includes('INITIALIZING_SYSTEM')) {
+          root.innerHTML = '<div style="color: #ff4444; padding: 20px; font-family: monospace;">CRITICAL_ERROR: Failed to load system modules. Check console for details.</div>';
+        }
+        return false;
+      };
+
+      // Redirect to trailing slash if missing
       if (window.location.pathname.endsWith('/Portfolio') && !window.location.pathname.endsWith('/Portfolio/')) {
         window.location.replace(window.location.pathname + '/');
       }
@@ -28,7 +38,7 @@
         100% { left: 200px; }
       }
     </style>
-    <script type="module" src="/src/main.tsx"></script>
+    <script type="module" src="./src/main.tsx"></script>
   </body>
 </html>
 
