@@ -188,15 +188,15 @@ export default function App() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <span className="font-mono text-cyber-green text-sm mb-4 block tracking-[0.3em] uppercase">System.Initialize()</span>
+            <span className="font-mono text-cyber-green text-sm mb-4 block tracking-[0.3em] uppercase">Computer Engineering</span>
             <h1 className="text-6xl md:text-8xl font-bold mb-6 leading-none tracking-tighter">
               ALEJANDRO <br />
               <span className="text-cyber-green glow-text">BLANCO</span>
             </h1>
             <p className="text-xl md:text-2xl text-gray-400 max-w-2xl font-light leading-relaxed">
-              Computer Engineering student at <span className="text-white font-medium">UNIE Universidad</span>. 
-              Specializing in <span className="text-cyber-green font-medium">Cybersecurity</span> and Digital Defense. 
-              I build secure architectures and analyze threats to protect the digital frontier.
+              Student at <span className="text-white font-medium">UNIE Universidad</span>. 
+              Focused on <span className="text-cyber-green font-medium">Cybersecurity</span> and software development. 
+              I design secure systems and analyze vulnerabilities to build a safer digital environment.
             </p>
             
             <div className="mt-10 flex flex-wrap gap-4">
@@ -257,7 +257,7 @@ export default function App() {
 
         {/* Experience */}
         <section id="experience">
-          <SectionTitle title="Field Experience" icon={Briefcase} />
+          <SectionTitle title="Experience" icon={Briefcase} />
           <Card className="relative overflow-hidden">
             <div className="flex flex-col md:flex-row md:justify-between md:items-start mb-4">
               <div>
@@ -281,7 +281,7 @@ export default function App() {
 
         {/* Skills */}
         <section id="skills">
-          <SectionTitle title="Technical Arsenal" icon={Code2} />
+          <SectionTitle title="Technical Skills" icon={Code2} />
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
             {skills.map((skill) => (
               <motion.div
@@ -301,7 +301,7 @@ export default function App() {
           <div className="flex justify-between items-end mb-8 border-b border-cyber-green/20 pb-2">
             <div className="flex items-center gap-3">
               <Github className="text-cyber-green w-6 h-6" />
-              <h2 className="text-2xl font-bold uppercase tracking-widest">Live Repositories</h2>
+              <h2 className="text-2xl font-bold uppercase tracking-widest">Projects</h2>
             </div>
             <a 
               href={`https://github.com/${GITHUB_USERNAME}`} 
@@ -386,8 +386,8 @@ export default function App() {
         <footer className="pt-24 pb-12 border-t border-white/5">
           <div className="flex flex-col md:flex-row justify-between items-center gap-8">
             <div>
-              <h2 className="text-3xl font-bold mb-2">Initialize Contact</h2>
-              <p className="text-gray-500 font-mono">Secure connection ready. Awaiting input...</p>
+              <h2 className="text-3xl font-bold mb-2">Get in Touch</h2>
+              <p className="text-gray-500 font-mono">Available for collaborations and professional inquiries.</p>
             </div>
             <div className="flex gap-6">
               <a 
@@ -409,7 +409,7 @@ export default function App() {
             </div>
           </div>
           <div className="mt-24 text-center text-gray-600 text-xs font-mono uppercase tracking-widest">
-            &copy; {new Date().getFullYear()} Alejandro Blanco // Secure Portfolio v2.0
+            &copy; {new Date().getFullYear()} Alejandro Blanco
           </div>
         </footer>
 
