@@ -53,20 +53,57 @@ export default function App() {
   const [repos, setRepos] = useState<Repo[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // Fallback projects in case GitHub API fails or is slow
+  const fallbackProjects = [
+    {
+      id: 1,
+      name: "MIPS-Processor-Simulator",
+      description: "A detailed simulator for MIPS architecture, focusing on instruction execution and memory management.",
+      html_url: `https://github.com/${GITHUB_USERNAME}`,
+      stargazers_count: 0,
+      forks_count: 0,
+      language: "C",
+      topics: ["architecture", "assembly"]
+    },
+    {
+      id: 2,
+      name: "Cyber-Security-Lab",
+      description: "Virtual laboratory setups for testing network security, penetration testing, and vulnerability assessment.",
+      html_url: `https://github.com/${GITHUB_USERNAME}`,
+      stargazers_count: 0,
+      forks_count: 0,
+      language: "Docker",
+      topics: ["security", "networking"]
+    },
+    {
+      id: 3,
+      name: "Text-Game-Engine",
+      description: "A custom engine for narrative-driven text games with complex state management and branching paths.",
+      html_url: `https://github.com/${GITHUB_USERNAME}`,
+      stargazers_count: 0,
+      forks_count: 0,
+      language: "Python",
+      topics: ["logic", "gamedev"]
+    }
+  ];
+
   useEffect(() => {
     const fetchRepos = async () => {
       try {
         const response = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=6`);
         if (response.ok) {
           const data = await response.json();
-          if (Array.isArray(data)) {
+          if (Array.isArray(data) && data.length > 0) {
             setRepos(data);
           } else {
-            console.error("GitHub API returned non-array data:", data);
+            setRepos(fallbackProjects as any);
           }
+        } else {
+          setRepos(fallbackProjects as any);
         }
       } catch (error) {
         console.error("Error fetching GitHub repos:", error);
+        setRepos(fallbackProjects as any);
       } finally {
         setLoading(false);
       }
