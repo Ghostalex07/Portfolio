@@ -180,10 +180,12 @@ export default function App() {
 
     const fetchRepos = async () => {
       try {
-        const response = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=6`);
+        const response = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=100`);
         if (response.ok) {
           const data = await response.json();
           if (Array.isArray(data) && data.length > 0) {
+            // Filter to show only non-forked repositories if preferred, 
+            // but the user asked for "all", so we'll show all.
             setRepos(data);
           } else {
             setRepos(fallbackProjects as any);
