@@ -26,6 +26,3 @@ This project is built with modern web technologies:
 - `/src/App.tsx`: Main application logic and UI components.
 - `/src/index.css`: Global styles and theme configurations.
 - `/public/`: Static assets.
-
----
-*Developed by Alejandro Blanco.*
