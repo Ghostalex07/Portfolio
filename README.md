@@ -52,11 +52,4 @@ Portfolio/
 ├── package.json
 └── vite.config.ts
 ```
-
-## 🔧 Deployment
-
-Automatically deploys to GitHub Pages via GitHub Actions on push to main.
-
----
-
-*Author: Alejandro Blanco*
+º
