@@ -28,6 +28,7 @@ import {
 } from "lucide-react";
 
 const GITHUB_USERNAME = "Ghostalex07";
+const EMAIL = "Alejandro.bj007@gmail.com";
 
 interface Repo {
   id: number;
@@ -129,7 +130,7 @@ export default function App() {
   const toggleTheme = () => setIsLightMode(!isLightMode);
 
   const copyEmail = () => {
-    navigator.clipboard.writeText("Alejandro.bj007@gmail.com");
+    navigator.clipboard.writeText(EMAIL);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -311,7 +312,7 @@ export default function App() {
               <a href={`https://github.com/${GITHUB_USERNAME}`} target="_blank" rel="noreferrer">
                 <Github className="w-5 h-5 text-[var(--text-primary)]" />
               </a>
-              <a href="mailto:Alejandro.bj007@gmail.com">
+              <a href={`mailto:${EMAIL}`}>
                 <Mail className="w-5 h-5 text-cyber-green" />
               </a>
             </div>
