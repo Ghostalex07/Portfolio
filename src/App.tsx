@@ -330,9 +330,8 @@ export default function App() {
               <span className="text-cyber-green">BLANCO</span>
             </h1>
             <p className="text-lg md:text-2xl text-[var(--text-secondary)] max-w-2xl font-light leading-relaxed">
-              Student at <span className="text-[var(--text-primary)] font-medium">UNIE Universidad</span>. 
-              Focused on <span className="text-cyber-green font-medium">Cybersecurity</span> and software development. 
-              I design secure systems and analyze vulnerabilities to build a safer digital environment.
+              Computer Engineering student at <span className="text-[var(--text-primary)] font-medium">UNIE Universidad</span>. 
+              Dedicated to <span className="text-cyber-green font-medium">Cybersecurity</span> and digital defense.
             </p>
             
             <div className="mt-10 flex flex-wrap gap-4">
@@ -357,14 +356,12 @@ export default function App() {
           <div>
             <SectionTitle title="Professional Profile" icon={User} />
             <p className="text-lg text-[var(--text-secondary)] leading-relaxed mb-6">
-              Computer Engineer based in Madrid with strong knowledge in Java, Python, and C. 
-              I bring discipline, consistency, and a continuous improvement mindset to every project, 
-              inspired by my dedication to fitness and technology.
+              Computer Engineering student at UNIE University, based in Madrid. 
+              My professional focus is entirely dedicated to <span className="text-[var(--text-primary)] font-medium">Cybersecurity</span>.
             </p>
             <p className="text-lg text-[var(--text-secondary)] leading-relaxed">
-              My core focus is on <span className="text-[var(--text-primary)]">Cybersecurity</span>, secure software architectures, 
-              and threat analysis. I leverage my background in Cloud (AWS/Azure) to build 
-              resilient and protected digital environments.
+              I combine engineering training with a proactive approach to threat analysis, 
+              securing digital systems and protecting infrastructure against modern vulnerabilities.
             </p>
           </div>
           <div>
