@@ -382,7 +382,7 @@ export default function App() {
                 <div className="absolute -left-[5px] top-0 w-[9px] h-[9px] bg-[var(--text-secondary)] opacity-30 rounded-full" />
                 <h3 className="text-xl font-bold text-[var(--text-primary)]">Colegio Nuestra Señora de la Merced</h3>
                 <p className="text-[var(--text-secondary)] font-mono text-sm">2021 — 2023</p>
-                <p className="text-[var(--text-secondary)] mt-2">Technological Baccalaureate</p>
+                <p className="text-[var(--text-secondary)] mt-2">High School Diploma in Science and Technology</p>
               </div>
             </div>
           </div>
