@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { 
   Shield, 
-  Terminal, 
-  Cpu, 
   Code2, 
   ExternalLink, 
   Mail, 
@@ -24,11 +22,11 @@ import {
   Copy,
   Check,
   Sun,
-  Moon
+  Moon,
+  User
 } from "lucide-react";
 
 const GITHUB_USERNAME = "Ghostalex07";
-const EMAIL = "Alejandro.bj007@gmail.com";
 
 interface Repo {
   id: number;
@@ -38,7 +36,6 @@ interface Repo {
   stargazers_count: number;
   forks_count: number;
   language: string;
-  topics: string[];
 }
 
 const SectionTitle = ({ title, icon: Icon, isOpen, onToggle }: { title: string; icon: any; isOpen?: boolean; onToggle?: () => void }) => (
@@ -48,7 +45,7 @@ const SectionTitle = ({ title, icon: Icon, isOpen, onToggle }: { title: string; 
   >
     <div className="flex items-center gap-3">
       <Icon className="text-cyber-green w-6 h-6 group-hover:scale-110 transition-transform" />
-      <h2 className="text-2xl font-bold uppercase tracking-widest group-hover:text-cyber-green transition-colors">{title}</h2>
+      <h2 className="text-2xl font-bold tracking-tight group-hover:text-cyber-green transition-colors">{title}</h2>
     </div>
     {onToggle && (
       <motion.div
@@ -105,8 +102,8 @@ const CollapsibleSection = ({
 
 const Card = ({ children, className = "" }: { children: React.ReactNode; className?: string; key?: string | number }) => (
   <motion.div 
-    whileHover={{ scale: 1.01 }}
-    className={`bg-cyber-gray border border-[var(--border-color)] p-6 rounded-lg hover:border-cyber-green/30 transition-all duration-300 ${className}`}
+    whileHover={{ y: -4 }}
+    className={`bg-cyber-gray border border-[var(--border-color)] p-6 rounded-xl hover:shadow-xl hover:shadow-cyber-green/5 transition-all duration-300 ${className}`}
   >
     {children}
   </motion.div>
@@ -130,7 +127,7 @@ export default function App() {
   const toggleTheme = () => setIsLightMode(!isLightMode);
 
   const copyEmail = () => {
-    navigator.clipboard.writeText(EMAIL);
+    navigator.clipboard.writeText("Alejandro.bj007@gmail.com");
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -144,8 +141,7 @@ export default function App() {
       html_url: `https://github.com/${GITHUB_USERNAME}`,
       stargazers_count: 0,
       forks_count: 0,
-      language: "C",
-      topics: ["architecture", "assembly"]
+      language: "C"
     },
     {
       id: 2,
@@ -154,8 +150,7 @@ export default function App() {
       html_url: `https://github.com/${GITHUB_USERNAME}`,
       stargazers_count: 0,
       forks_count: 0,
-      language: "Docker",
-      topics: ["security", "networking"]
+      language: "Docker"
     },
     {
       id: 3,
@@ -164,8 +159,7 @@ export default function App() {
       html_url: `https://github.com/${GITHUB_USERNAME}`,
       stargazers_count: 0,
       forks_count: 0,
-      language: "Python",
-      topics: ["logic", "gamedev"]
+      language: "Python"
     }
   ];
 
@@ -234,23 +228,18 @@ export default function App() {
 
   return (
     <div className="min-h-screen cyber-grid relative overflow-hidden">
-      <div className="scanline"></div>
       
       {/* Navigation / Header */}
-      <header className="sticky top-0 z-50 bg-cyber-dark/80 backdrop-blur-md border-b border-white/5">
+      <header className="sticky top-0 z-50 bg-cyber-dark/80 backdrop-blur-md border-b border-[var(--border-color)]">
         <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
           <div className="flex items-center gap-4">
-            <div className="font-mono text-cyber-green font-bold text-xl tracking-tighter">
-              AB<span className="animate-pulse">_</span>
-            </div>
-            <div className="hidden lg:flex items-center gap-2 px-3 py-1 bg-cyber-green/5 border border-cyber-green/20 rounded-full">
-              <div className="w-2 h-2 bg-cyber-green rounded-full animate-pulse"></div>
-              <span className="text-[10px] font-mono text-cyber-green uppercase tracking-tighter">Status: Active</span>
+            <div className="font-sans text-cyber-green font-bold text-xl tracking-tighter">
+              AB
             </div>
           </div>
           
           {/* Desktop Nav */}
-          <nav className="hidden md:flex gap-8 text-xs font-mono uppercase tracking-widest">
+          <nav className="hidden md:flex gap-8 text-sm font-medium">
             <a href="#about" className="hover:text-cyber-green transition-colors">About</a>
             <a href="#experience" className="hover:text-cyber-green transition-colors">Experience</a>
             <a href="#skills" className="hover:text-cyber-green transition-colors">Skills</a>
@@ -259,32 +248,38 @@ export default function App() {
           </nav>
 
           <div className="flex items-center gap-4">
-            <div className="hidden sm:flex gap-4">
+            <div className="flex items-center gap-4">
               <button 
                 onClick={toggleTheme}
-                className="p-2 rounded-full hover:bg-white/10 transition-colors text-cyber-green"
+                className="p-2 rounded-full hover:bg-white/10 transition-colors text-cyber-green flex items-center justify-center"
                 title="Toggle Theme"
               >
                 {isLightMode ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
               </button>
-              <a href="https://www.linkedin.com/in/alejandroblancojimenez/" target="_blank" rel="noreferrer">
-                <Linkedin className="w-5 h-5 hover:text-cyber-blue transition-colors" />
-              </a>
-              <a href={`https://github.com/${GITHUB_USERNAME}`} target="_blank" rel="noreferrer">
-                <Github className="w-5 h-5 hover:text-[var(--text-primary)] transition-colors" />
-              </a>
+              <div className="hidden sm:flex items-center gap-4">
+                <a 
+                  href="https://www.linkedin.com/in/alejandroblancojimenez/" 
+                  target="_blank" 
+                  rel="noreferrer"
+                  className="p-1 hover:text-cyber-blue transition-colors flex items-center"
+                >
+                  <Linkedin className="w-5 h-5" />
+                </a>
+                <a 
+                  href={`https://github.com/${GITHUB_USERNAME}`} 
+                  target="_blank" 
+                  rel="noreferrer"
+                  className="p-1 hover:text-[var(--text-primary)] transition-colors flex items-center"
+                >
+                  <Github className="w-5 h-5" />
+                </a>
+              </div>
             </div>
             
             {/* Mobile Menu Toggle */}
-            <div className="flex items-center gap-2 md:hidden">
+            <div className="md:hidden">
               <button 
-                onClick={toggleTheme}
-                className="p-2 rounded-full hover:bg-white/10 transition-colors text-cyber-green"
-              >
-                {isLightMode ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
-              </button>
-              <button 
-                className="text-cyber-green"
+                className="text-cyber-green p-2"
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
               >
                 {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -298,7 +293,7 @@ export default function App() {
           <motion.div 
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="md:hidden bg-cyber-dark border-b border-[var(--border-color)] px-6 py-8 space-y-6 font-mono text-sm uppercase tracking-widest"
+            className="md:hidden bg-cyber-dark border-b border-[var(--border-color)] px-6 py-8 space-y-6 font-sans text-lg font-medium"
           >
             <a href="#about" onClick={() => setIsMenuOpen(false)} className="block hover:text-cyber-green">About</a>
             <a href="#experience" onClick={() => setIsMenuOpen(false)} className="block hover:text-cyber-green">Experience</a>
@@ -312,7 +307,7 @@ export default function App() {
               <a href={`https://github.com/${GITHUB_USERNAME}`} target="_blank" rel="noreferrer">
                 <Github className="w-5 h-5 text-[var(--text-primary)]" />
               </a>
-              <a href={`mailto:${EMAIL}`}>
+              <a href="mailto:Alejandro.bj007@gmail.com">
                 <Mail className="w-5 h-5 text-cyber-green" />
               </a>
             </div>
@@ -329,10 +324,10 @@ export default function App() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <span className="font-mono text-cyber-green text-sm mb-4 block tracking-[0.3em] uppercase">Computer Engineering</span>
+            <span className="font-sans text-cyber-green text-sm font-semibold mb-4 block tracking-[0.2em] uppercase">Computer Engineering</span>
             <h1 className="text-4xl sm:text-6xl md:text-8xl font-bold mb-6 leading-none tracking-tighter">
               ALEJANDRO <br />
-              <span className="text-cyber-green glow-text">BLANCO</span>
+              <span className="text-cyber-green">BLANCO</span>
             </h1>
             <p className="text-lg md:text-2xl text-[var(--text-secondary)] max-w-2xl font-light leading-relaxed">
               Student at <span className="text-[var(--text-primary)] font-medium">UNIE Universidad</span>. 
@@ -341,17 +336,17 @@ export default function App() {
             </p>
             
             <div className="mt-10 flex flex-wrap gap-4">
-              <div className="flex items-center gap-2 text-sm font-mono bg-cyber-gray px-4 py-2 rounded-full border border-[var(--border-color)]">
+              <div className="flex items-center gap-2 text-sm bg-cyber-gray px-4 py-2 rounded-full border border-[var(--border-color)]">
                 <MapPin className="w-4 h-4 text-cyber-green" />
                 Madrid, Spain
               </div>
-              <div className="flex items-center gap-2 text-sm font-mono bg-cyber-gray px-4 py-2 rounded-full border border-[var(--border-color)]">
+              <div className="flex items-center gap-2 text-sm bg-cyber-gray px-4 py-2 rounded-full border border-[var(--border-color)]">
                 <Globe className="w-4 h-4 text-cyber-blue" />
                 Spanish (Native) / English (Advanced)
               </div>
-              <div className="flex items-center gap-2 text-sm font-mono bg-cyber-green/10 text-cyber-green px-4 py-2 rounded-full border border-cyber-green/20">
-                <Lock className="w-4 h-4" />
-                Cybersecurity Focused
+              <div className="flex items-center gap-2 text-sm font-medium bg-cyber-green/10 text-cyber-green px-4 py-2 rounded-full border border-cyber-green/20">
+                <Shield className="w-4 h-4" />
+                Security Specialist
               </div>
             </div>
           </motion.div>
@@ -360,7 +355,7 @@ export default function App() {
         {/* About / Education */}
         <section id="about" className="grid md:grid-rows-1 md:grid-cols-2 gap-12">
           <div>
-            <SectionTitle title="Mission Brief" icon={Terminal} />
+            <SectionTitle title="Professional Profile" icon={User} />
             <p className="text-lg text-[var(--text-secondary)] leading-relaxed mb-6">
               Computer Engineer based in Madrid with strong knowledge in Java, Python, and C. 
               I bring discipline, consistency, and a continuous improvement mindset to every project, 
@@ -402,9 +397,9 @@ export default function App() {
             <div className="flex flex-col md:flex-row md:justify-between md:items-start mb-4">
               <div>
                 <h3 className="text-2xl font-bold text-[var(--text-primary)]">IT Specialist</h3>
-                <p className="text-cyber-green font-mono">RTTC</p>
+                <p className="text-cyber-green font-medium">RTTC</p>
               </div>
-              <p className="text-[var(--text-secondary)] font-mono text-sm mt-2 md:mt-0">01/2024 — 03/2025</p>
+              <p className="text-[var(--text-secondary)] text-sm mt-2 md:mt-0">01/2024 — 03/2025</p>
             </div>
             <ul className="space-y-3 text-[var(--text-secondary)]">
               <li className="flex gap-3">
@@ -429,7 +424,7 @@ export default function App() {
                 className="bg-cyber-gray border border-[var(--border-color)] p-4 rounded flex flex-col items-center justify-center text-center group hover:border-cyber-green/50 transition-all"
               >
                 <span className="text-[var(--text-primary)] font-medium group-hover:text-cyber-green transition-colors">{skill.name}</span>
-                <span className="text-[10px] font-mono text-[var(--text-secondary)] opacity-60 uppercase mt-1">{skill.category}</span>
+                <span className="text-[10px] text-[var(--text-secondary)] opacity-60 uppercase mt-1 tracking-wider">{skill.category}</span>
               </motion.div>
             ))}
           </div>
@@ -449,8 +444,8 @@ export default function App() {
                 repos.map((repo) => (
                   <Card key={repo.id} className="flex flex-col h-full">
                     <div className="flex justify-between items-start mb-4">
-                      <Terminal className="w-6 h-6 text-cyber-green" />
-                      <div className="flex gap-3 text-xs font-mono text-[var(--text-secondary)] opacity-60">
+                      <Code2 className="w-6 h-6 text-cyber-green" />
+                      <div className="flex gap-3 text-xs text-[var(--text-secondary)] opacity-60">
                         <span className="flex items-center gap-1"><Star className="w-3 h-3" /> {repo.stargazers_count}</span>
                         <span className="flex items-center gap-1"><GitFork className="w-3 h-3" /> {repo.forks_count}</span>
                       </div>
@@ -472,9 +467,9 @@ export default function App() {
                       href={repo.html_url} 
                       target="_blank" 
                       rel="noreferrer"
-                      className="text-xs font-mono text-cyber-green flex items-center gap-1 hover:underline"
+                      className="text-xs font-medium text-cyber-green flex items-center gap-1 hover:underline"
                     >
-                      Source Code <ExternalLink className="w-3 h-3" />
+                      Repository <ExternalLink className="w-3 h-3" />
                     </a>
                   </Card>
                 ))
@@ -497,7 +492,7 @@ export default function App() {
                 </div>
                 <div>
                   <h4 className="font-bold text-sm text-[var(--text-primary)]">{cert.title}</h4>
-                  <p className="text-xs text-cyber-blue font-mono mt-1">{cert.issuer}</p>
+                  <p className="text-xs text-cyber-blue font-medium mt-1">{cert.issuer}</p>
                   <p className="text-xs text-[var(--text-secondary)] opacity-70 mt-1">{cert.desc}</p>
                 </div>
               </div>
@@ -509,29 +504,29 @@ export default function App() {
         <footer className="pt-24 pb-12 border-t border-[var(--border-color)]">
           <div className="flex flex-col md:flex-row justify-between items-center gap-8">
             <div className="text-center md:text-left">
-              <h2 className="text-3xl font-bold mb-2 text-[var(--text-primary)]">Get in Touch</h2>
-              <p className="text-[var(--text-secondary)] font-mono">Available for collaborations and professional inquiries.</p>
+              <h2 className="text-3xl font-bold mb-2 text-[var(--text-primary)]">Contact Me</h2>
+              <p className="text-[var(--text-secondary)]">Available for collaborations and professional inquiries.</p>
             </div>
             <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 w-full sm:w-auto">
               <a 
                 href="https://www.linkedin.com/in/alejandroblancojimenez/" 
                 target="_blank" 
                 rel="noreferrer"
-                className="flex items-center justify-center gap-2 bg-cyber-blue/10 text-cyber-blue px-8 py-4 rounded-full hover:bg-cyber-blue hover:text-[var(--bg-main)] transition-all font-mono text-sm"
+                className="flex items-center justify-center gap-2 bg-cyber-blue/10 text-cyber-blue px-8 py-4 rounded-full hover:bg-cyber-blue hover:text-[var(--bg-main)] transition-all text-sm font-medium"
               >
                 <Linkedin className="w-4 h-4" />
                 LinkedIn
               </a>
               <button 
                 onClick={copyEmail}
-                className="flex items-center justify-center gap-2 bg-cyber-green/10 text-cyber-green px-8 py-4 rounded-full hover:bg-cyber-green hover:text-[var(--bg-main)] transition-all font-mono text-sm group"
+                className="flex items-center justify-center gap-2 bg-cyber-green/10 text-cyber-green px-8 py-4 rounded-full hover:bg-cyber-green hover:text-[var(--bg-main)] transition-all text-sm font-medium group"
               >
                 {copied ? <Check className="w-4 h-4" /> : <Mail className="w-4 h-4" />}
                 {copied ? "Copied!" : "Copy Email"}
               </button>
             </div>
           </div>
-          <div className="mt-24 text-center text-gray-600 text-xs font-mono uppercase tracking-widest">
+          <div className="mt-24 text-center text-[var(--text-secondary)] text-sm opacity-50">
             &copy; {new Date().getFullYear()} Alejandro Blanco
           </div>
         </footer>

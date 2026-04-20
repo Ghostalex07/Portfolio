@@ -1,55 +1,31 @@
-# Portfolio
+# Alejandro Blanco - Cybersecurity Portfolio
 
-My personal portfolio website built with React, Vite, and Tailwind CSS.
+Professional portfolio showcasing projects, experience, and certifications in Computer Engineering and Cybersecurity.
 
-🌐 **Live Site**: https://ghostalex07.github.io/Portfolio/
-
----
-
-## 🚀 Quick Start
-
-```bash
-# Clone the repo
-git clone https://github.com/Ghostalex07/Portfolio.git
-cd Portfolio
-
-# Install dependencies
-npm install
-
-# Start dev server
-npm run dev
-```
+## 🌐 Live Website
+You can visit the live portfolio here: [https://ais-pre-ryyj3b74svbq5gqwxl6w73-345963847660.europe-west2.run.app](https://ais-pre-ryyj3b74svbq5gqwxl6w73-345963847660.europe-west2.run.app)
 
 ## 🛠️ Tech Stack
+This project is built with modern web technologies:
 
-| Category | Technology |
-|----------|------------|
-| Framework | React 19 |
-| Build Tool | Vite |
-| Styling | Tailwind CSS 4 |
-| Animations | Motion |
-| Icons | Lucide React |
-| Language | TypeScript |
+- **Frontend Framework**: [React 19](https://react.dev/)
+- **Build Tool**: [Vite](https://vitejs.dev/)
+- **Styling**: [Tailwind CSS 4](https://tailwindcss.com/)
+- **Animations**: [Motion](https://motion.dev/)
+- **Icons**: [Lucide React](https://lucide.dev/)
+- **Language**: [TypeScript](https://www.typescriptlang.org/)
 
-## 📋 Available Scripts
-
-| Command | Description |
-|--------|-------------|
-| `npm run dev` | Start dev server on port 3000 |
-| `npm run build` | Build for production |
-| `npm run preview` | Preview production build |
-| `npm run lint` | Run TypeScript type check |
+## ⚡ Features
+- **Responsive Design**: Fully optimized for mobile, tablet, and desktop devices.
+- **Theme Support**: Includes both Dark and Light modes with high-readability contrast.
+- **Dynamic Content**: Integrates with GitHub API to display real-time repository data.
+- **Interactive UI**: Collapsible sections and smooth transitions for a better user experience.
+- **Cybersecurity Aesthetic**: Custom-designed interface reflecting the security focus.
 
 ## 📁 Project Structure
+- `/src/App.tsx`: Main application logic and UI components.
+- `/src/index.css`: Global styles and theme configurations.
+- `/public/`: Static assets.
 
-```
-Portfolio/
-├── src/
-│   ├── App.tsx      # Main app component
-│   ├── main.tsx    # Entry point
-│   └── index.css   # Global styles
-├── public/         # Static assets
-├── package.json
-└── vite.config.ts
-```
-º
+---
+*Developed by Alejandro Blanco.*
