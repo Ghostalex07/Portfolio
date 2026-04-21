@@ -20,25 +20,20 @@
         window.location.replace(window.location.pathname + '/');
       }
     </script>
-    <script type="module" crossorigin src="./assets/index-d0Ls7dHo.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-BrH0xi5Y.css">
+    <script type="module" crossorigin src="./assets/index-C45kJarn.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-Du5mMOcX.css">
   </head>
   <body>
     <div id="root">
-      <div style="background-color: #020617; height: 100vh; display: flex; align-items: center; justify-content: center; color: #3b82f6; font-family: sans-serif;">
-        <div style="text-align: center;">
-          <div style="font-size: 24px; margin-bottom: 10px; font-weight: bold;">LOADING...</div>
-          <div style="width: 200px; height: 2px; background: #0f172a; margin: 0 auto; position: relative; overflow: hidden;">
-            <div style="position: absolute; width: 50px; height: 100%; background: #3b82f6; animation: loading 2s infinite linear;"></div>
-          </div>
-        </div>
+      <div style="background-color: #020617; height: 100vh; display: flex; align-items: center; justify-content: center;">
+        <div style="width: 40px; height: 40px; border: 2px solid #0f172a; border-top-color: #3b82f6; border-radius: 50%; animation: spin 1s linear infinite;"></div>
       </div>
     </div>
     <style>
-      @keyframes loading {
-        0% { left: -50px; }
-        100% { left: 200px; }
+      @keyframes spin {
+        to { transform: rotate(360deg); }
       }
+      body { margin: 0; padding: 0; }
     </style>
   </body>
 </html>
