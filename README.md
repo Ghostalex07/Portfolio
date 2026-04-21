@@ -1,9 +1,9 @@
-# Alejandro Blanco - Cybersecurity Portfolio
+# Alejandro Blanco - Portfolio
 
 Professional portfolio showcasing projects, experience, and certifications in Computer Engineering and Cybersecurity.
 
 ## 🌐 Live Website
-You can visit the live portfolio here: [https://ais-pre-ryyj3b74svbq5gqwxl6w73-345963847660.europe-west2.run.app](https://ais-pre-ryyj3b74svbq5gqwxl6w73-345963847660.europe-west2.run.app)
+You can visit the live portfolio here: [https://ghostalex07.github.io/Portfolio/](https://ghostalex07.github.io/Portfolio/)
 
 ## 🛠️ Tech Stack
 This project is built with modern web technologies:
@@ -28,4 +28,4 @@ This project is built with modern web technologies:
 - `/public/`: Static assets.
 
 ---
-*Developed by Alejandro Blanco.*
+*Built by Alejandro Blanco, where math meets AI.*
