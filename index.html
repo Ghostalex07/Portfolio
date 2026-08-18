@@ -1,50 +1,13 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Alejandro Blanco | Cybersecurity Portfolio</title>
-    <script>
-      // Error logging to help debug GitHub Pages issues
-      window.onerror = function(msg, url, lineNo, columnNo, error) {
-        console.error('System Error:', msg, url, lineNo, columnNo, error);
-        const root = document.getElementById('root');
-        if (root && root.innerText.includes('INITIALIZING_SYSTEM')) {
-          root.innerHTML = '<div style="color: #ff4444; padding: 20px; font-family: monospace;">CRITICAL_ERROR: Failed to load system modules. Check console for details.</div>';
-        }
-        return false;
-      };
-
-      // Redirect to trailing slash if missing
-      if (window.location.pathname.endsWith('/Portfolio') && !window.location.pathname.endsWith('/Portfolio/')) {
-        window.location.replace(window.location.pathname + '/');
-      }
-    </script>
+    <meta name="description" content="Cybersecurity engineer and software developer based in Madrid. Focused on secure systems, threat analysis, and cloud infrastructure." />
   </head>
   <body>
-    <div id="root">
-      <div style="background-color: #0a0a0a; height: 100vh; display: flex; align-items: center; justify-content: center; color: #00ff41; font-family: monospace;">
-        <div style="text-align: center;">
-          <div style="font-size: 24px; margin-bottom: 10px;">INITIALIZING_SYSTEM...</div>
-          <div style="width: 200px; height: 2px; background: #1a1a1a; margin: 0 auto; position: relative; overflow: hidden;">
-            <div style="position: absolute; width: 50px; height: 100%; background: #00ff41; animation: loading 2s infinite linear;"></div>
-          </div>
-          <div id="debug-info" style="margin-top: 20px; font-size: 10px; color: #666; cursor: pointer;" onclick="this.innerText = 'URL: ' + window.location.href + '\nPath: ' + window.location.pathname">
-            [SYSTEM_INFO]
-          </div>
-          <div style="margin-top: 10px;">
-            <a href="." style="color: #00ff41; font-size: 12px; text-decoration: underline;">RELOAD_SYSTEM</a>
-          </div>
-        </div>
-      </div>
-    </div>
-    <style>
-      @keyframes loading {
-        0% { left: -50px; }
-        100% { left: 200px; }
-      }
-    </style>
+    <div id="root"></div>
     <script type="module" src="./src/main.tsx"></script>
   </body>
 </html>
-

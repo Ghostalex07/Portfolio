@@ -1,85 +1,54 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
 @import "tailwindcss";
+@font-face {
+  font-family: "Geist";
+  src: url("../node_modules/geist/dist/fonts/geist-sans/Geist-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Geist Mono";
+  src: url("../node_modules/geist/dist/fonts/geist-mono/GeistMono-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
 
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
-  
-  --color-cyber-green: var(--cyber-green);
-  --color-cyber-blue: var(--cyber-blue);
-  --color-cyber-dark: var(--bg-main);
-  --color-cyber-gray: var(--bg-card);
-}
+  --font-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, monospace;
 
-:root {
-  --bg-main: #0a0a0a;
-  --bg-card: #1a1a1a;
-  --text-primary: #ffffff;
-  --text-secondary: #9ca3af;
-  --border-color: rgba(255, 255, 255, 0.05);
-  --grid-color: rgba(0, 255, 65, 0.05);
-  --cyber-green: #00ff41;
-  --cyber-blue: #00f0ff;
-}
-
-:root.light {
-  --bg-main: #f5f5f5;
-  --bg-card: #ffffff;
-  --text-primary: #1a1a1a;
-  --text-secondary: #4b5563;
-  --border-color: rgba(0, 0, 0, 0.05);
-  --grid-color: rgba(0, 255, 65, 0.1);
-  --cyber-green: #008f23; /* Darker green for readability */
-  --cyber-blue: #0077cc;  /* Darker blue for readability */
+  --color-surface: #09090b;
+  --color-surface-raised: #18181b;
+  --color-surface-border: #27272a;
+  --color-accent: #10b981;
+  --color-accent-muted: rgba(16, 185, 129, 0.1);
+  --color-text-primary: #f4f4f5;
+  --color-text-secondary: #a1a1aa;
 }
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
   body {
-    @apply bg-cyber-dark text-[var(--text-secondary)] font-sans selection:bg-cyber-green/30 selection:text-cyber-green transition-colors duration-300;
+    @apply bg-surface text-text-secondary font-sans antialiased;
   }
-
-  h1, h2, h3, h4 {
-    @apply font-mono tracking-tight text-[var(--text-primary)];
+  ::selection {
+    @apply bg-accent/20 text-accent;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply text-text-primary;
   }
 }
 
-.cyber-grid {
-  background-image: linear-gradient(var(--grid-color) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
-  background-size: 40px 40px;
-}
-
-.glow-text {
-  text-shadow: 0 0 10px var(--cyber-green);
-}
-
-:root.light .glow-text {
-  text-shadow: 0 0 5px var(--cyber-green);
-  opacity: 0.9;
-}
-
-.glow-border {
-  box-shadow: 0 0 15px var(--cyber-green);
-  border: 1px solid var(--cyber-green);
-}
-
-.scanline {
-  width: 100%;
-  height: 100px;
-  z-index: 10;
-  background: linear-gradient(0deg, transparent 0%, var(--cyber-green) 50%, transparent 100%);
-  opacity: 0.05;
-  position: absolute;
-  bottom: 100%;
-  animation: scanline 10s linear infinite;
-  pointer-events: none;
-}
-
-:root.light .scanline {
-  opacity: 0.1;
-}
-
-@keyframes scanline {
-  0% { bottom: 100%; }
-  100% { bottom: -100px; }
+@layer utilities {
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
 }
