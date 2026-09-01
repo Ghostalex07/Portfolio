@@ -4,21 +4,6 @@ My personal portfolio website built with React, Vite, and Tailwind CSS.
 
 🌐 **Live Site**: https://ghostalex07.github.io/Portfolio/
 
----
-
-## 🚀 Quick Start
-
-```bash
-# Clone the repo
-git clone https://github.com/Ghostalex07/Portfolio.git
-cd Portfolio
-
-# Install dependencies
-npm install
-
-# Start dev server
-npm run dev
-```
 
 ## 🛠️ Tech Stack
 
