@@ -4,6 +4,8 @@ import { useReducedMotion } from "motion/react";
 import { useGSAP } from "../hooks/useGSAP";
 
 const GITHUB_USERNAME = "Ghostalex07";
+const CACHE_KEY = "gh-repos-cache";
+const CACHE_TTL = 60 * 60 * 1000;
 
 interface Repo {
   id: number;
@@ -100,9 +102,32 @@ function Skeleton() {
   );
 }
 
+function readCache(): Repo[] | null {
+  try {
+    const raw = localStorage.getItem(CACHE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as { ts: number; data: Repo[] };
+    if (Date.now() - parsed.ts > CACHE_TTL) return null;
+    return Array.isArray(parsed.data) && parsed.data.length > 0 ? parsed.data : null;
+  } catch {
+    return null;
+  }
+}
+
+function writeCache(repos: Repo[]) {
+  try {
+    localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), data: repos }));
+  } catch {
+    // storage unavailable (private mode, quota); skip
+  }
+}
+
 export function Projects() {
-  const [repos, setRepos] = useState<Repo[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [repos, setRepos] = useState<Repo[]>(() => {
+    if (typeof window === "undefined") return [];
+    return readCache() ?? [];
+  });
+  const [loading, setLoading] = useState(() => repos.length === 0);
   const reduce = useReducedMotion();
   const scope = useRef<HTMLDivElement>(null);
 
@@ -123,27 +148,42 @@ export function Projects() {
   }, [reduce, loading]);
 
   useEffect(() => {
+    if (repos.length > 0) return; // fresh cache on first paint, no fetch needed
+
+    let cancelled = false;
     const timer = setTimeout(() => {
-      if (loading) setRepos(FALLBACK);
-      setLoading(false);
+      if (!cancelled) {
+        setRepos(FALLBACK);
+        setLoading(false);
+      }
     }, 5000);
 
     fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=100`)
       .then((r) => (r.ok ? r.json() : null))
       .then((data) => {
+        if (cancelled) return;
         if (Array.isArray(data) && data.length > 0) {
           setRepos(data);
+          writeCache(data);
         } else {
-          setRepos(FALLBACK);
+          setRepos((prev) => (prev.length > 0 ? prev : FALLBACK));
         }
       })
-      .catch(() => setRepos(FALLBACK))
+      .catch(() => {
+        if (cancelled) return;
+        setRepos((prev) => (prev.length > 0 ? prev : FALLBACK));
+      })
       .finally(() => {
-        setLoading(false);
-        clearTimeout(timer);
+        if (!cancelled) {
+          setLoading(false);
+          clearTimeout(timer);
+        }
       });
 
-    return () => clearTimeout(timer);
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
   }, []);
 
   // Bento: make first item span 2 cols on lg

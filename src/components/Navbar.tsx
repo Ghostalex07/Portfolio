@@ -57,6 +57,7 @@ export function Navbar() {
             <a
               key={item.href}
               href={item.href}
+              aria-current={active === item.href ? "true" : undefined}
               className={`relative transition-colors hover:text-accent ${
                 active === item.href ? "text-accent" : "text-text-secondary"
               }`}
@@ -76,6 +77,7 @@ export function Navbar() {
             href="https://www.linkedin.com/in/alejandroblancojimenez/"
             target="_blank"
             rel="noreferrer"
+            aria-label="LinkedIn"
             className="text-text-secondary transition-colors hover:text-accent"
           >
             <LinkedinLogo className="h-5 w-5" weight="regular" />
@@ -84,12 +86,14 @@ export function Navbar() {
             href="https://github.com/Ghostalex07"
             target="_blank"
             rel="noreferrer"
+            aria-label="GitHub"
             className="text-text-secondary transition-colors hover:text-accent"
           >
             <GithubLogo className="h-5 w-5" weight="regular" />
           </a>
           <a
             href="mailto:Alejandro.bj007@gmail.com"
+            aria-label="Email"
             className="text-text-secondary transition-colors hover:text-accent"
           >
             <EnvelopeSimple className="h-5 w-5" weight="regular" />
@@ -128,13 +132,13 @@ export function Navbar() {
             ))}
           </nav>
           <div className="mt-6 flex gap-5 border-t border-surface-border pt-5">
-            <a href="https://www.linkedin.com/in/alejandroblancojimenez/" target="_blank" rel="noreferrer">
+            <a href="https://www.linkedin.com/in/alejandroblancojimenez/" target="_blank" rel="noreferrer" aria-label="LinkedIn">
               <LinkedinLogo className="h-5 w-5 text-text-secondary" weight="regular" />
             </a>
-            <a href="https://github.com/Ghostalex07" target="_blank" rel="noreferrer">
+            <a href="https://github.com/Ghostalex07" target="_blank" rel="noreferrer" aria-label="GitHub">
               <GithubLogo className="h-5 w-5 text-text-secondary" weight="regular" />
             </a>
-            <a href="mailto:Alejandro.bj007@gmail.com">
+            <a href="mailto:Alejandro.bj007@gmail.com" aria-label="Email">
               <EnvelopeSimple className="h-5 w-5 text-text-secondary" weight="regular" />
             </a>
           </div>

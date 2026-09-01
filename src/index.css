@@ -33,8 +33,10 @@
 }
 
 @layer base {
-  html {
-    scroll-behavior: smooth;
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
   }
   body {
     @apply bg-surface text-text-secondary font-sans antialiased;
@@ -45,6 +47,11 @@
   }
   h1, h2, h3, h4, h5, h6 {
     @apply text-text-primary;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 2px;
   }
 }
 
@@ -72,6 +79,12 @@
     90% { transform: translate(-10%, 10%); }
   }
 
+  @media (prefers-reduced-motion: reduce) {
+    .grain::before {
+      animation: none;
+    }
+  }
+
   .text-balance { text-wrap: balance; }
 
   .mask-fade-b {
@@ -85,4 +98,45 @@
 
   .no-scrollbar::-webkit-scrollbar { display: none; }
   .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+}
+
+@media print {
+  body {
+    background: #fff !important;
+    color: #000 !important;
+    font-size: 11px;
+  }
+  .grain::before,
+  header,
+  .back-to-top,
+  #back-to-top-wrapper {
+    display: none !important;
+  }
+  a::after {
+    content: " (" attr(href) ")";
+    font-size: 0.8em;
+  }
+  section {
+    padding: 0.75rem 0 !important;
+    break-inside: avoid;
+  }
+  section > div {
+    max-width: none !important;
+    padding: 0 !important;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    color: #000 !important;
+    break-after: avoid;
+  }
+  p, li {
+    color: #000 !important;
+  }
+  .hero-card,
+  .mask-fade-b {
+    display: none !important;
+  }
+  a {
+    color: #000 !important;
+    text-decoration: underline;
+  }
 }

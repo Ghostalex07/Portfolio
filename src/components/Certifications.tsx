@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { Shield, Trophy, CloudArrowUp, Brain, Certificate, Medal } from "@phosphor-icons/react";
+import { Shield, Trophy, CloudArrowUp, Brain, Certificate, Medal, CaretLeft, CaretRight } from "@phosphor-icons/react";
 import { useReducedMotion } from "motion/react";
 import { useGSAP } from "../hooks/useGSAP";
 
@@ -17,8 +17,13 @@ const CERTIFICATIONS = [
 export function Certifications() {
   const reduce = useReducedMotion();
   const scope = useRef<HTMLDivElement>(null);
+  const track = useRef<HTMLDivElement>(null);
   const featured = CERTIFICATIONS.filter((c) => c.featured);
   const rest = CERTIFICATIONS.filter((c) => !c.featured);
+
+  const scrollByStep = (dir: 1 | -1) => {
+    track.current?.scrollBy({ left: dir * 288, behavior: reduce ? "auto" : "smooth" });
+  };
 
   useGSAP((gsap) => {
     if (reduce) return;
@@ -71,7 +76,7 @@ export function Certifications() {
           ))}
         </div>
 
-        <div className="no-scrollbar -mx-6 flex snap-x snap-mandatory gap-4 overflow-x-auto px-6 pb-2">
+        <div ref={track} role="region" aria-label="More certifications" className="no-scrollbar -mx-6 flex snap-x snap-mandatory gap-4 overflow-x-auto px-6 pb-2">
           {rest.map((cert) => (
             <div
               key={cert.title}
@@ -86,6 +91,24 @@ export function Certifications() {
               </div>
             </div>
           ))}
+        </div>
+        <div className="mt-6 flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => scrollByStep(-1)}
+            aria-label="Previous certifications"
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-surface-border text-text-secondary transition-colors hover:border-accent/40 hover:text-accent"
+          >
+            <CaretLeft className="h-4 w-4" weight="bold" />
+          </button>
+          <button
+            type="button"
+            onClick={() => scrollByStep(1)}
+            aria-label="Next certifications"
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-surface-border text-text-secondary transition-colors hover:border-accent/40 hover:text-accent"
+          >
+            <CaretRight className="h-4 w-4" weight="bold" />
+          </button>
         </div>
       </div>
     </section>

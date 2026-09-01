@@ -1,8 +1,21 @@
-import { LinkedinLogo, ArrowUpRight } from "@phosphor-icons/react";
+import { useState } from "react";
+import { LinkedinLogo, ArrowUpRight, Copy, Check } from "@phosphor-icons/react";
 
 const EMAIL = "Alejandro.bj007@gmail.com";
 
 export function Footer() {
+  const [copied, setCopied] = useState(false);
+
+  const copyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(EMAIL);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // clipboard unavailable; mailto link below still works
+    }
+  };
+
   return (
     <footer className="relative border-t border-surface-border py-20 md:py-28">
       <div className="pointer-events-none absolute left-1/2 top-0 h-px w-2/3 -translate-x-1/2 bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
@@ -13,8 +26,21 @@ export function Footer() {
               Let's build something
               <span className="text-accent"> resilient</span>.
             </h2>
-            <p className="mt-4 max-w-md font-mono text-sm text-text-secondary">
+            <p className="mt-4 flex max-w-md items-center gap-3 font-mono text-sm text-text-secondary">
               {EMAIL}
+              <button
+                type="button"
+                onClick={copyEmail}
+                aria-label={copied ? "Email copied" : "Copy email address"}
+                className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs transition-colors ${
+                  copied
+                    ? "border-accent/50 text-accent"
+                    : "border-surface-border text-text-muted hover:border-accent/40 hover:text-accent"
+                }`}
+              >
+                {copied ? <Check className="h-3.5 w-3.5" weight="bold" /> : <Copy className="h-3.5 w-3.5" weight="regular" />}
+                {copied ? "Copied!" : "Copy"}
+              </button>
             </p>
           </div>
 

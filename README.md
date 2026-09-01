@@ -10,10 +10,10 @@ My personal portfolio website built with React, Vite, and Tailwind CSS.
 | Category | Technology |
 |----------|------------|
 | Framework | React 19 |
-| Build Tool | Vite |
+| Build Tool | Vite 6 |
 | Styling | Tailwind CSS 4 |
-| Animations | Motion |
-| Icons | Lucide React |
+| Animations | GSAP + Motion |
+| Icons | Phosphor Icons |
 | Language | TypeScript |
 
 ## 📋 Available Scripts
@@ -30,10 +30,22 @@ My personal portfolio website built with React, Vite, and Tailwind CSS.
 ```
 Portfolio/
 ├── src/
-│   ├── App.tsx      # Main app component
-│   ├── main.tsx    # Entry point
-│   └── index.css   # Global styles
-├── public/         # Static assets
+│   ├── App.tsx                  # Main app
+│   ├── main.tsx                 # Entry point
+│   ├── index.css                # Global styles & theme
+│   ├── hooks/
+│   │   └── useGSAP.ts           # GSAP + ScrollTrigger hook
+│   └── components/
+│       ├── Navbar.tsx           # Sticky nav with active section
+│       ├── Hero.tsx             # Hero + status card
+│       ├── About.tsx            # Intro + education
+│       ├── Experience.tsx       # Timeline
+│       ├── Skills.tsx           # Skill pills
+│       ├── Projects.tsx         # Live GitHub repos
+│       ├── Certifications.tsx   # Featured + carousel
+│       ├── BackToTop.tsx        # Scroll to top
+│       └── Footer.tsx
+├── public/                      # Static assets (favicon, robots.txt, ai.txt, 404)
 ├── package.json
 └── vite.config.ts
 ```
