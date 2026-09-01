@@ -1,0 +1,8 @@
+Contact: mailto:Alejandro.bj007@gmail.com
+Canonical: https://ghostalex07.github.io/Portfolio/.well-known/security.txt
+Expires: 2027-09-01
+Preferred-Languages: en, es
+
+# Security researchers: if you find a vulnerability in this site,
+# report it via the contact above. I'll acknowledge it, and won't sue
+# for good-faith, clearly-scoped research.
