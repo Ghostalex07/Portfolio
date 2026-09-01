@@ -9,9 +9,10 @@ import { Footer } from "./components/Footer";
 
 export default function App() {
   return (
-    <div className="min-h-screen">
+    <div className="relative min-h-screen grain">
+      <div className="pointer-events-none fixed inset-0 z-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_-5%,rgba(240,166,60,0.05),transparent)]" />
       <Navbar />
-      <main>
+      <main className="relative z-10">
         <Hero />
         <About />
         <Experience />

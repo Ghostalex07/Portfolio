@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { motion, useReducedMotion } from "motion/react";
+import { useEffect, useRef, useState } from "react";
+import { motion, useMotionValueEvent, useReducedMotion, useScroll } from "motion/react";
 import { List, X, GithubLogo, LinkedinLogo, EnvelopeSimple } from "@phosphor-icons/react";
 
 const NAV_ITEMS = [
@@ -7,18 +7,49 @@ const NAV_ITEMS = [
   { label: "Experience", href: "#experience" },
   { label: "Skills", href: "#skills" },
   { label: "Projects", href: "#projects" },
-  { label: "Certifications", href: "#certs" },
+  { label: "Certs", href: "#certs" },
 ];
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [active, setActive] = useState("");
   const reduce = useReducedMotion();
+  const sectionIds = useRef(NAV_ITEMS.map((i) => i.href));
+  const { scrollY } = useScroll();
+
+  useMotionValueEvent(scrollY, "change", (y) => setScrolled(y > 24));
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActive(`#${entry.target.id}`);
+        });
+      },
+      { rootMargin: "-45% 0px -50% 0px" },
+    );
+
+    sectionIds.current.forEach((href) => {
+      const el = document.querySelector(href);
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-surface-border/50 bg-surface/80 backdrop-blur-xl">
+    <header
+      className={`sticky top-0 z-50 border-b transition-all duration-300 ${
+        scrolled
+          ? "border-surface-border/60 bg-surface/90 backdrop-blur-xl"
+          : "border-transparent bg-transparent"
+      }`}
+    >
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-        <a href="#" className="font-mono text-lg font-bold tracking-tight text-accent">
-          AB<span className="animate-pulse">_</span>
+        <a href="#" className="group font-mono text-lg font-bold tracking-tight text-accent">
+          AB
+          <span className="inline-block transition-transform duration-300 group-hover:translate-y-[-2px]">_</span>
         </a>
 
         <nav className="hidden items-center gap-8 text-xs font-mono uppercase tracking-widest md:flex">
@@ -26,9 +57,16 @@ export function Navbar() {
             <a
               key={item.href}
               href={item.href}
-              className="transition-colors hover:text-accent"
+              className={`relative transition-colors hover:text-accent ${
+                active === item.href ? "text-accent" : "text-text-secondary"
+              }`}
             >
               {item.label}
+              <span
+                className={`absolute -bottom-1 left-0 h-px bg-accent transition-all duration-300 ${
+                  active === item.href ? "w-full" : "w-0"
+                }`}
+              />
             </a>
           ))}
         </nav>
@@ -62,6 +100,8 @@ export function Navbar() {
           className="text-accent md:hidden"
           onClick={() => setOpen(!open)}
           aria-label="Toggle menu"
+          aria-expanded={open}
+          aria-controls="mobile-menu"
         >
           {open ? <X className="h-6 w-6" weight="regular" /> : <List className="h-6 w-6" weight="regular" />}
         </button>
@@ -69,6 +109,7 @@ export function Navbar() {
 
       {open && (
         <motion.div
+          id="mobile-menu"
           initial={reduce ? false : { opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
           exit={reduce ? undefined : { opacity: 0, y: -8 }}

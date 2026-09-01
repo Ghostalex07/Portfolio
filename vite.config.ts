@@ -15,5 +15,16 @@ export default defineConfig(() => {
     server: {
       hmr: true,
     },
+    build: {
+      chunkSizeWarningLimit: 700,
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            'gsap': ['gsap', 'gsap/ScrollTrigger'],
+            'motion': ['motion'],
+          },
+        },
+      },
+    },
   };
 });

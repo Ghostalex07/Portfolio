@@ -1,39 +1,80 @@
-import { Code } from "@phosphor-icons/react";
+import { useRef } from "react";
+import { useReducedMotion } from "motion/react";
+import { useGSAP } from "../hooks/useGSAP";
 
-const SKILLS = [
-  { name: "Java", category: "Backend" },
-  { name: "Python", category: "Scripting" },
-  { name: "C", category: "Low Level" },
-  { name: "MIPS Assembly", category: "Low Level" },
-  { name: "HTML/CSS", category: "Frontend" },
-  { name: "Docker", category: "DevOps" },
-  { name: "Git", category: "Tools" },
-  { name: "Transformers", category: "AI" },
-  { name: "Jupyter Notebook", category: "Data" },
-  { name: "R", category: "Data" },
-  { name: "Cobol", category: "Legacy" },
-  { name: "Flet", category: "UI" },
+interface Category {
+  label: string;
+  skills: string[];
+}
+
+const CATEGORIES: Category[] = [
+  {
+    label: "Languages",
+    skills: ["Java", "Python", "C", "COBOL", "MIPS Assembly", "HTML/CSS"],
+  },
+  {
+    label: "Cloud & DevOps",
+    skills: ["AWS", "Azure", "Docker", "Git", "Linux"],
+  },
+  {
+    label: "Security",
+    skills: [
+      "Cybersecurity",
+      "Network Security",
+      "Identity & Access",
+      "Microsoft Sentinel",
+      "Microsoft 365 Defender",
+    ],
+  },
+  {
+    label: "Data & AI",
+    skills: ["Machine Learning", "Transformers", "Jupyter Notebook", "R"],
+  },
 ];
 
 export function Skills() {
+  const reduce = useReducedMotion();
+  const scope = useRef<HTMLDivElement>(null);
+
+  useGSAP((gsap) => {
+    if (reduce) return;
+    gsap.fromTo(
+      ".skill-cat",
+      { opacity: 0, y: 24 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.7,
+        ease: "power3.out",
+        stagger: 0.08,
+        scrollTrigger: { trigger: scope.current, start: "top 70%" },
+      },
+    );
+  }, [reduce]);
+
   return (
-    <section id="skills" className="scroll-mt-24 border-t border-surface-border py-16 md:py-24">
+    <section ref={scope} id="skills" className="relative scroll-mt-24 border-t border-surface-border py-24 md:py-36">
       <div className="mx-auto max-w-6xl px-6">
-        <div className="mb-8 flex items-center gap-3">
-          <Code className="h-5 w-5 text-accent" weight="regular" />
-          <h2 className="text-lg font-bold">Technical Skills</h2>
+        <div className="mb-12">
+          <h2 className="text-2xl font-bold tracking-tight text-text-primary md:text-3xl">
+            Skills
+          </h2>
         </div>
 
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
-          {SKILLS.map((skill) => (
-            <div
-              key={skill.name}
-              className="flex flex-col items-center justify-center rounded-lg border border-surface-border bg-surface-raised p-4 text-center transition-colors hover:border-accent/40"
-            >
-              <span className="text-sm font-medium text-text-primary">{skill.name}</span>
-              <span className="mt-1 font-mono text-[10px] uppercase tracking-wider text-text-secondary/50">
-                {skill.category}
-              </span>
+        <div className="grid gap-x-12 gap-y-14 md:grid-cols-2">
+          {CATEGORIES.map((cat) => (
+            <div key={cat.label} className="skill-cat">
+              <h3 className="mb-5 text-lg font-bold text-text-primary">{cat.label}</h3>
+              <div className="flex flex-wrap gap-2.5">
+                {cat.skills.map((skill) => (
+                  <span
+                    key={skill}
+                    className="rounded-full border border-surface-border bg-surface-raised px-4 py-2 text-sm text-text-secondary transition-colors hover:border-accent/40 hover:text-accent"
+                  >
+                    {skill}
+                  </span>
+                ))}
+              </div>
             </div>
           ))}
         </div>
