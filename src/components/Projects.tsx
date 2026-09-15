@@ -154,6 +154,7 @@ export function Projects() {
     return readCache() ?? [];
   });
   const [loading, setLoading] = useState(() => repos.length === 0);
+  const [shouldFetch, setShouldFetch] = useState(false);
   const reduce = useReducedMotion();
   const scope = useRef<HTMLDivElement>(null);
 
@@ -174,7 +175,24 @@ export function Projects() {
   }, [reduce, loading]);
 
   useEffect(() => {
-    if (repos.length > 0) return; // fresh cache on first paint, no fetch needed
+    if (repos.length > 0) return;
+    const el = scope.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          observer.disconnect();
+          setShouldFetch(true);
+        }
+      },
+      { rootMargin: "300px 0px" },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [repos.length]);
+
+  useEffect(() => {
+    if (!shouldFetch) return;
 
     let cancelled = false;
     const timer = setTimeout(() => {
@@ -193,9 +211,7 @@ export function Projects() {
           }
         }
       })
-      .catch(() => {
-        // live feed unavailable; curated cards still render
-      })
+      .catch(() => {})
       .finally(() => {
         if (!cancelled) {
           setLoading(false);
@@ -207,7 +223,7 @@ export function Projects() {
       cancelled = true;
       clearTimeout(timer);
     };
-  }, []);
+  }, [shouldFetch]);
 
   const byName = new Map<string, Repo>(repos.map((r) => [r.name, r]));
   const featured: Card[] = FEATURED.map((f) => {

@@ -38,3 +38,5 @@ Disallow: /
 # Everyone else (regular search engines, humans) is allowed
 User-agent: *
 Allow: /
+
+Sitemap: https://ghostalex07.github.io/Portfolio/sitemap.xml
