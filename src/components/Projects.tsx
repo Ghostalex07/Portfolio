@@ -17,51 +17,48 @@ interface Repo {
   language: string | null;
   topics: string[];
   fork?: boolean;
+  size?: number;
 }
 
-const FALLBACK: Repo[] = [
+interface FeaturedRepo {
+  name: string;
+  description: string;
+  language: string;
+  topics: string[];
+}
+
+const FEATURED: FeaturedRepo[] = [
   {
-    id: 1,
-    name: "MIPS-Processor-Simulator",
+    name: "YouMuDow",
     description:
-      "A detailed simulator for MIPS architecture, focusing on instruction execution and memory management.",
-    html_url: `https://github.com/${GITHUB_USERNAME}/MIPS-Processor-Simulator`,
-    stargazers_count: 0,
-    forks_count: 0,
-    language: "C",
-    topics: ["architecture", "simulator"],
-  },
-  {
-    id: 2,
-    name: "Cyber-Security-Lab",
-    description:
-      "Virtual laboratory setups for testing network security, penetration testing, and vulnerability assessment.",
-    html_url: `https://github.com/${GITHUB_USERNAME}/Cyber-Security-Lab`,
-    stargazers_count: 0,
-    forks_count: 0,
-    language: "Dockerfile",
-    topics: ["security", "lab"],
-  },
-  {
-    id: 3,
-    name: "Text-Game-Engine",
-    description:
-      "A custom engine for narrative-driven text games with complex state management and branching paths.",
-    html_url: `https://github.com/${GITHUB_USERNAME}/Text-Game-Engine`,
-    stargazers_count: 0,
-    forks_count: 0,
+      "Cross-platform music & video downloader built with Python and yt-dlp — desktop GUI, reusable CLI, download queue, embedded metadata, persistent config, and CI/CD.",
     language: "Python",
-    topics: ["game", "engine"],
+    topics: ["python", "yt-dlp", "desktop"],
+  },
+  {
+    name: "phishing-domain-detection",
+    description:
+      "Machine Learning project that detects phishing domains using domain-based features and classification models — my first real project mixing security and data.",
+    language: "Python",
+    topics: ["security", "machine-learning", "python"],
+  },
+  {
+    name: "Mips-Python-Simulator",
+    description:
+      "A Python-based MIPS processor simulator that executes binary-encoded instructions with full register and memory emulation.",
+    language: "Python",
+    topics: ["python", "mips", "architecture"],
+  },
+  {
+    name: "CountryApp",
+    description:
+      "An Angular application for exploring the world — search countries by capital, name, or region, with population, flag, and location details.",
+    language: "TypeScript",
+    topics: ["angular", "typescript", "api"],
   },
 ];
 
-function repoDescription(repo: Repo): string {
-  if (repo.description && repo.description.trim().length > 0) return repo.description;
-  if (Array.isArray(repo.topics) && repo.topics.length > 0) {
-    return `Exploring ${repo.topics.slice(0, 2).join(" and ")} in public — details landing soon.`;
-  }
-  return "Work in progress — check the repository for the latest state.";
-}
+const EXCLUDED_NAMES = new Set(["Portfolio", "Ghostalex07", "disgusting", "Web", "pipes-app"]);
 
 const LANG_COLORS: Record<string, string> = {
   TypeScript: "#3178c6",
@@ -89,6 +86,14 @@ const LANG_COLORS: Record<string, string> = {
 function langColor(lang: string | null): string {
   if (!lang) return "#8b8b8b";
   return LANG_COLORS[lang] ?? "#ef9f4a";
+}
+
+function repoDescription(repo: Repo): string {
+  if (repo.description && repo.description.trim().length > 0) return repo.description;
+  if (Array.isArray(repo.topics) && repo.topics.length > 0) {
+    return `Exploring ${repo.topics.slice(0, 2).join(" and ")} in public — details landing soon.`;
+  }
+  return "Work in progress — check the repository for the latest state.";
 }
 
 function Skeleton() {
@@ -131,6 +136,18 @@ function writeCache(repos: Repo[]) {
   }
 }
 
+interface Card {
+  id: string;
+  name: string;
+  description: string;
+  html_url: string;
+  stargazers_count: number;
+  forks_count: number;
+  language: string | null;
+  topics: string[];
+  featured: boolean;
+}
+
 export function Projects() {
   const [repos, setRepos] = useState<Repo[]>(() => {
     if (typeof window === "undefined") return [];
@@ -161,10 +178,7 @@ export function Projects() {
 
     let cancelled = false;
     const timer = setTimeout(() => {
-      if (!cancelled) {
-        setRepos(FALLBACK);
-        setLoading(false);
-      }
+      if (!cancelled) setLoading(false);
     }, 5000);
 
     fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=100`)
@@ -172,20 +186,15 @@ export function Projects() {
       .then((data) => {
         if (cancelled) return;
         if (Array.isArray(data) && data.length > 0) {
-          const repos = (data as Repo[]).filter((r) => !r.fork);
-          if (repos.length > 0) {
-            setRepos(repos);
-            writeCache(repos);
-          } else {
-            setRepos((prev) => (prev.length > 0 ? prev : FALLBACK));
+          const filtered = (data as Repo[]).filter((r) => !r.fork);
+          if (filtered.length > 0) {
+            setRepos(filtered);
+            writeCache(filtered);
           }
-        } else {
-          setRepos((prev) => (prev.length > 0 ? prev : FALLBACK));
         }
       })
       .catch(() => {
-        if (cancelled) return;
-        setRepos((prev) => (prev.length > 0 ? prev : FALLBACK));
+        // live feed unavailable; curated cards still render
       })
       .finally(() => {
         if (!cancelled) {
@@ -200,8 +209,38 @@ export function Projects() {
     };
   }, []);
 
-  // Bento: make first item span 2 cols on lg
-  const spanFirst = repos.length > 0;
+  const byName = new Map<string, Repo>(repos.map((r) => [r.name, r]));
+  const featured: Card[] = FEATURED.map((f) => {
+    const live = byName.get(f.name);
+    return {
+      id: `featured-${f.name}`,
+      name: f.name,
+      description: f.description,
+      html_url: live?.html_url ?? `https://github.com/${GITHUB_USERNAME}/${f.name}`,
+      stargazers_count: live?.stargazers_count ?? 0,
+      forks_count: live?.forks_count ?? 0,
+      language: f.language,
+      topics: f.topics,
+      featured: true,
+    };
+  });
+  const others: Card[] = repos
+    .filter((r) => !FEATURED.some((f) => f.name === r.name))
+    .filter((r) => !EXCLUDED_NAMES.has(r.name))
+    .filter((r) => r.size > 0 && r.description && r.description.trim().length > 3)
+    .slice(0, 6)
+    .map((r) => ({
+      id: `repo-${r.id}`,
+      name: r.name,
+      description: repoDescription(r),
+      html_url: r.html_url,
+      stargazers_count: r.stargazers_count,
+      forks_count: r.forks_count,
+      language: r.language,
+      topics: r.topics ?? [],
+      featured: false,
+    }));
+  const cards = [...featured, ...others];
 
   return (
     <section ref={scope} id="projects" className="relative scroll-mt-24 border-t border-surface-border py-24 md:py-36">
@@ -211,7 +250,7 @@ export function Projects() {
             Projects
           </h2>
           <span className="hidden font-mono text-xs text-text-muted sm:inline">
-            pulled live from GitHub
+            curated + live from GitHub
           </span>
         </div>
 
@@ -219,9 +258,9 @@ export function Projects() {
           <Skeleton />
         ) : (
           <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {repos.map((repo, i) => {
+            {cards.map((repo, i) => {
               const color = langColor(repo.language);
-              const isWide = spanFirst && i === 0;
+              const isWide = i === 0;
               return (
                 <a
                   key={repo.id}
@@ -246,14 +285,21 @@ export function Projects() {
                         {repo.name}
                       </h3>
                     </div>
-                    <ArrowSquareOut
-                      className="h-4 w-4 shrink-0 text-text-muted transition-colors group-hover:text-accent"
-                      weight="regular"
-                    />
+                    <div className="flex shrink-0 items-center gap-3">
+                      {repo.featured && (
+                        <span className="rounded-full bg-accent-muted px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-accent-soft">
+                          ✦ curated
+                        </span>
+                      )}
+                      <ArrowSquareOut
+                        className="h-4 w-4 text-text-muted transition-colors group-hover:text-accent"
+                        weight="regular"
+                      />
+                    </div>
                   </div>
 
                   <p className="mb-5 flex-1 text-xs leading-relaxed text-text-secondary line-clamp-3">
-                    {repoDescription(repo)}
+                    {repo.description}
                   </p>
 
                   {repo.topics && repo.topics.length > 0 && (
