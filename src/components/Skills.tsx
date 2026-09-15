@@ -2,33 +2,51 @@ import { useRef } from "react";
 import { useReducedMotion } from "motion/react";
 import { useGSAP } from "../hooks/useGSAP";
 
+interface Skill {
+  name: string;
+  core?: boolean;
+}
+
 interface Category {
   label: string;
-  skills: string[];
+  skills: Skill[];
 }
 
 const CATEGORIES: Category[] = [
   {
     label: "Languages",
-    skills: ["Java", "Python", "C", "COBOL", "MIPS Assembly", "HTML/CSS"],
+    skills: [
+      { name: "Java", core: true },
+      { name: "Python", core: true },
+      { name: "C", core: true },
+      { name: "COBOL" },
+      { name: "MIPS Assembly" },
+      { name: "HTML/CSS" },
+    ],
   },
   {
     label: "Cloud & DevOps",
-    skills: ["AWS", "Azure", "Docker", "Git", "Linux"],
+    skills: [
+      { name: "Azure", core: true },
+      { name: "AWS" },
+      { name: "Docker", core: true },
+      { name: "Git", core: true },
+      { name: "Linux", core: true },
+    ],
   },
   {
     label: "Security",
     skills: [
-      "Cybersecurity",
-      "Network Security",
-      "Identity & Access",
-      "Microsoft Sentinel",
-      "Microsoft 365 Defender",
+      { name: "Cybersecurity", core: true },
+      { name: "Network Security" },
+      { name: "Identity & Access" },
+      { name: "Microsoft Sentinel" },
+      { name: "Microsoft 365 Defender" },
     ],
   },
   {
     label: "Data & AI",
-    skills: ["Machine Learning", "Transformers", "Jupyter Notebook", "R"],
+    skills: ["Machine Learning", "Transformers", "Jupyter Notebook", "R"].map((name) => ({ name })),
   },
 ];
 
@@ -59,6 +77,9 @@ export function Skills() {
           <h2 className="text-2xl font-bold tracking-tight text-text-primary md:text-3xl">
             Skills
           </h2>
+          <p className="mt-3 font-mono text-[11px] uppercase tracking-wider text-text-muted">
+            <span className="text-accent">●</span> core stack &nbsp;·&nbsp; others = working knowledge
+          </p>
         </div>
 
         <div className="grid gap-x-12 gap-y-14 md:grid-cols-2">
@@ -68,10 +89,14 @@ export function Skills() {
               <div className="flex flex-wrap gap-2.5">
                 {cat.skills.map((skill) => (
                   <span
-                    key={skill}
-                    className="rounded-full border border-surface-border bg-surface-raised px-4 py-2 text-sm text-text-secondary transition-colors hover:border-accent/40 hover:text-accent"
+                    key={skill.name}
+                    className={
+                      skill.core
+                        ? "rounded-full border border-accent/40 bg-accent-muted px-4 py-2 text-sm text-accent-soft transition-colors hover:border-accent hover:text-accent"
+                        : "rounded-full border border-surface-border bg-surface-raised px-4 py-2 text-sm text-text-secondary transition-colors hover:border-accent/40 hover:text-accent"
+                    }
                   >
-                    {skill}
+                    {skill.name}
                   </span>
                 ))}
               </div>

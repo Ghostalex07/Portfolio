@@ -16,6 +16,7 @@ interface Repo {
   forks_count: number;
   language: string | null;
   topics: string[];
+  fork?: boolean;
 }
 
 const FALLBACK: Repo[] = [
@@ -24,7 +25,7 @@ const FALLBACK: Repo[] = [
     name: "MIPS-Processor-Simulator",
     description:
       "A detailed simulator for MIPS architecture, focusing on instruction execution and memory management.",
-    html_url: `https://github.com/${GITHUB_USERNAME}`,
+    html_url: `https://github.com/${GITHUB_USERNAME}/MIPS-Processor-Simulator`,
     stargazers_count: 0,
     forks_count: 0,
     language: "C",
@@ -35,10 +36,10 @@ const FALLBACK: Repo[] = [
     name: "Cyber-Security-Lab",
     description:
       "Virtual laboratory setups for testing network security, penetration testing, and vulnerability assessment.",
-    html_url: `https://github.com/${GITHUB_USERNAME}`,
+    html_url: `https://github.com/${GITHUB_USERNAME}/Cyber-Security-Lab`,
     stargazers_count: 0,
     forks_count: 0,
-    language: "Docker",
+    language: "Dockerfile",
     topics: ["security", "lab"],
   },
   {
@@ -46,13 +47,21 @@ const FALLBACK: Repo[] = [
     name: "Text-Game-Engine",
     description:
       "A custom engine for narrative-driven text games with complex state management and branching paths.",
-    html_url: `https://github.com/${GITHUB_USERNAME}`,
+    html_url: `https://github.com/${GITHUB_USERNAME}/Text-Game-Engine`,
     stargazers_count: 0,
     forks_count: 0,
     language: "Python",
     topics: ["game", "engine"],
   },
 ];
+
+function repoDescription(repo: Repo): string {
+  if (repo.description && repo.description.trim().length > 0) return repo.description;
+  if (Array.isArray(repo.topics) && repo.topics.length > 0) {
+    return `Exploring ${repo.topics.slice(0, 2).join(" and ")} in public — details landing soon.`;
+  }
+  return "Work in progress — check the repository for the latest state.";
+}
 
 const LANG_COLORS: Record<string, string> = {
   TypeScript: "#3178c6",
@@ -163,8 +172,13 @@ export function Projects() {
       .then((data) => {
         if (cancelled) return;
         if (Array.isArray(data) && data.length > 0) {
-          setRepos(data);
-          writeCache(data);
+          const repos = (data as Repo[]).filter((r) => !r.fork);
+          if (repos.length > 0) {
+            setRepos(repos);
+            writeCache(repos);
+          } else {
+            setRepos((prev) => (prev.length > 0 ? prev : FALLBACK));
+          }
         } else {
           setRepos((prev) => (prev.length > 0 ? prev : FALLBACK));
         }
@@ -239,7 +253,7 @@ export function Projects() {
                   </div>
 
                   <p className="mb-5 flex-1 text-xs leading-relaxed text-text-secondary line-clamp-3">
-                    {repo.description || "No description provided."}
+                    {repoDescription(repo)}
                   </p>
 
                   {repo.topics && repo.topics.length > 0 && (

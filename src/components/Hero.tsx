@@ -87,23 +87,31 @@ export function Hero() {
             </div>
           </div>
 
-          <div className="hero-card ring-chrome rounded-2xl border border-surface-border bg-surface-raised p-6 lg:justify-self-end lg:w-[19rem]">
-            <div className="flex items-center justify-between">
+          <div className="hero-card ring-chrome rounded-xl border border-surface-border/80 bg-surface-raised p-5 lg:justify-self-end lg:w-[17rem]">
+            <p className="mb-4 font-mono text-[10px] uppercase tracking-[0.28em] text-text-muted">
+              {"//"} status
+            </p>
+
+            <div className="flex items-center justify-between gap-3">
               <span className="inline-flex items-center gap-2 text-sm font-medium text-text-primary">
                 <span className="relative flex h-2 w-2">
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-70" />
                   <span className="relative inline-flex h-2 w-2 rounded-full bg-accent" />
                 </span>
-                Software intern at DIGITAL55
+                Intern at DIGITAL55
               </span>
               <span className="font-mono text-[10px] uppercase tracking-wider text-text-muted">now</span>
             </div>
 
-            <div className="my-5 h-px w-full bg-surface-border" />
+            <div className="my-4 h-px w-full bg-surface-border/70" />
 
             <dl className="space-y-3 text-sm">
               <div className="flex items-baseline justify-between gap-4">
-                <dt className="text-text-muted">Studying</dt>
+                <dt className="font-mono text-[10px] uppercase tracking-wider text-text-muted">Focus</dt>
+                <dd className="font-medium text-text-primary">Cybersecurity</dd>
+              </div>
+              <div className="flex items-baseline justify-between gap-4">
+                <dt className="font-mono text-[10px] uppercase tracking-wider text-text-muted">Study</dt>
                 <dd className="text-right font-medium text-text-primary">
                   B.Sc. Computer Engineering
                   <span className="mt-0.5 block font-mono text-[10px] uppercase tracking-wider text-text-muted">
@@ -111,19 +119,15 @@ export function Hero() {
                   </span>
                 </dd>
               </div>
-              <div className="flex items-baseline justify-between gap-4">
-                <dt className="text-text-muted">Focus</dt>
-                <dd className="font-medium text-text-primary">Cybersecurity</dd>
-              </div>
             </dl>
 
-            <div className="my-5 h-px w-full bg-surface-border" />
+            <div className="my-4 h-px w-full bg-surface-border/70" />
 
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-1.5">
               {STACK.map((tool) => (
                 <span
                   key={tool}
-                  className="rounded-full border border-surface-border px-3 py-1 font-mono text-[11px] text-text-secondary"
+                  className="rounded-full border border-surface-border/80 px-2.5 py-0.5 font-mono text-[10px] text-text-secondary"
                 >
                   {tool}
                 </span>
