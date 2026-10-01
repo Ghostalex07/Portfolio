@@ -291,13 +291,16 @@ export function Projects() {
   return (
     <section ref={scope} id="projects" className="relative scroll-mt-24 border-t border-surface-border py-24 md:py-40">
       <div className="mx-auto w-full max-w-[80rem] px-6 sm:px-8 lg:px-12">
-        <div className="mb-14 flex items-end justify-between gap-6">
+        {/* Titulo, regla y procedencia en un solo renglon. La nota deja de flotar
+            suelta en la esquina superior derecha y pasa a ser el remate de una
+            linea continua; por debajo de sm la regla se retira y la nota cae
+            bajo el titular, nunca se oculta. */}
+        <div className="mb-14 flex flex-wrap items-baseline gap-x-5 gap-y-2 sm:flex-nowrap">
           <h2 className="text-h2 font-bold tracking-tight text-text-primary">
             Projects
           </h2>
-          <span className="hidden font-mono text-xs text-text-muted sm:inline">
-            curated + live from GitHub
-          </span>
+          <span className="hidden h-px flex-1 self-center bg-surface-border sm:block" aria-hidden="true" />
+          <p className="font-mono text-xs text-text-muted">curated + live from GitHub</p>
         </div>
 
         {loading ? (

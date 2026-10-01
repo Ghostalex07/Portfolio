@@ -49,6 +49,10 @@ const CATEGORIES: Category[] = [
   },
 ];
 
+const ALL_SKILLS = CATEGORIES.flatMap((category) => category.skills);
+const SKILL_COUNT = ALL_SKILLS.length;
+const CORE_COUNT = ALL_SKILLS.filter((skill) => skill.core).length;
+
 export function Skills() {
   const reduce = useReducedMotion();
 
@@ -71,13 +75,25 @@ export function Skills() {
   return (
     <section ref={scope} id="skills" className="relative scroll-mt-24 border-t border-surface-border py-16 md:py-24">
       <div className="mx-auto w-full max-w-[80rem] px-6 sm:px-8 lg:px-12">
-        <div className="mb-8">
+        {/* El dato va delante y el titulo detras: es el unico encabezado de la
+            pagina que no los ordena de izquierda a derecha. En movil la
+            columna cae debajo por orden de lectura, asi que el titular sigue
+            siendo lo primero. La frase de apoyo anterior
+            ("core stack, others are working knowledge") era un titulo mas
+            repetido en verso pequeno; los dos numeros dicen lo mismo y el
+            acento de `core` conserva el codigo de las pills. */}
+        <div className="mb-10 flex flex-col gap-x-10 gap-y-3 sm:flex-row sm:items-end sm:justify-between">
           <h2 className="text-h2-sm font-bold tracking-tight text-text-primary">
             Skills
           </h2>
-          <p className="mt-3 font-mono text-micro uppercase tracking-wider text-text-muted">
-            <span className="text-accent">core</span> stack, others are working knowledge
-          </p>
+          <div className="font-mono text-xs leading-relaxed text-text-muted sm:text-right">
+            <p>
+              <span className="text-text-primary">{SKILL_COUNT}</span> skills
+            </p>
+            <p>
+              <span className="text-accent">{CORE_COUNT}</span> core
+            </p>
+          </div>
         </div>
 
         <div className="grid gap-x-12 gap-y-14 md:grid-cols-2">

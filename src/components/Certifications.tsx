@@ -49,18 +49,22 @@ export function Certifications() {
   return (
     <section ref={scope} id="certs" className="relative scroll-mt-24 border-t border-surface-border py-16 md:py-24">
       <div className="mx-auto w-full max-w-[80rem] px-6 sm:px-8 lg:px-12">
-        <div className="mb-10 flex items-end justify-between gap-6">
-          <h2 className="text-h2-sm font-bold tracking-tight text-text-primary">
-            Certifications
-          </h2>
-          <span className="hidden font-mono text-xs text-text-muted sm:inline">
-            {CERTIFICATIONS.length} credentials
-          </span>
-        </div>
-
-        {/* Las dos insignias: filas a ancho completo, sin caja. El peso lo da el
-            tamano del titular, no un contenedor. */}
+        {/* El encabezado es la primera fila del libro mayor: comparte filete, ritmo
+            y columna con las credenciales, asi que no queda un bloque suelto
+            encima del listado. El recuento ya no se esconde en movil, donde
+            antes `hidden sm:inline` lo hacia desaparecer sin sustituto. */}
         <div className="border-t border-surface-border">
+          <div className="flex items-baseline justify-between gap-6 py-7 md:py-9">
+            <h2 className="text-h2-sm font-bold tracking-tight text-text-primary">
+              Certifications
+            </h2>
+            <p className="shrink-0 font-mono text-xs text-text-muted">
+              {CERTIFICATIONS.length} credentials
+            </p>
+          </div>
+
+          {/* Las dos insignias: filas a ancho completo, sin caja. El peso lo da el
+              tamano del titular, no un contenedor. */}
           {featured.map((cert) => (
             <div
               key={cert.title}

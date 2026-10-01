@@ -49,14 +49,18 @@ export function Experience() {
   return (
     <section ref={scope} id="experience" className="relative scroll-mt-24 py-20 md:py-28">
       <div className="mx-auto w-full max-w-[80rem] px-6 sm:px-8 lg:px-12">
-        <div className="mb-10">
-          <h2 className="text-h2-sm font-bold tracking-tight text-text-primary">
-            Experience
-          </h2>
-        </div>
-
+        {/* El encabezado no flota encima de la lista: entra en la columna del
+            eje y el filete vertical arranca en el propio titulo. La seccion se
+            lee como una sola linea de tiempo con el titular como primer punto,
+            no como un h2 suelto seguido de un timeline. */}
         <div className="relative">
           <span className="absolute bottom-0 top-1.5 left-[7px] w-px bg-surface-border" />
+
+          <div className="mb-10 pl-10 md:pl-12">
+            <h2 className="text-h2-sm font-bold tracking-tight text-text-primary">
+              Experience
+            </h2>
+          </div>
 
           <div className="space-y-16">
             {EXPERIENCE.map((job) => (
