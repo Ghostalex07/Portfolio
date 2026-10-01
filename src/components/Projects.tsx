@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import { GithubLogo, Star, GitFork, ArrowSquareOut } from "@phosphor-icons/react";
+import { useEffect, useState } from "react";
+import { GithubLogo, Star, GitFork } from "@phosphor-icons/react";
 import { useReducedMotion } from "motion/react";
 import { useGSAP } from "../hooks/useGSAP";
 
@@ -31,14 +31,14 @@ const FEATURED: FeaturedRepo[] = [
   {
     name: "YouMuDow",
     description:
-      "Cross-platform music & video downloader built with Python and yt-dlp — desktop GUI, reusable CLI, download queue, embedded metadata, persistent config, and CI/CD.",
+      "Cross-platform music & video downloader built with Python and yt-dlp: desktop GUI, reusable CLI, download queue, embedded metadata, persistent config, and CI/CD.",
     language: "Python",
     topics: ["python", "yt-dlp", "desktop"],
   },
   {
     name: "phishing-domain-detection",
     description:
-      "Machine Learning project that detects phishing domains using domain-based features and classification models — my first real project mixing security and data.",
+      "Machine Learning project that detects phishing domains using domain-based features and classification models. My first real project mixing security and data.",
     language: "Python",
     topics: ["security", "machine-learning", "python"],
   },
@@ -52,7 +52,7 @@ const FEATURED: FeaturedRepo[] = [
   {
     name: "CountryApp",
     description:
-      "An Angular application for exploring the world — search countries by capital, name, or region, with population, flag, and location details.",
+      "An Angular application for exploring the world: search countries by capital, name, or region, with population, flag, and location details.",
     language: "TypeScript",
     topics: ["angular", "typescript", "api"],
   },
@@ -60,55 +60,50 @@ const FEATURED: FeaturedRepo[] = [
 
 const EXCLUDED_NAMES = new Set(["Portfolio", "Ghostalex07", "disgusting", "Web", "pipes-app"]);
 
-const LANG_COLORS: Record<string, string> = {
-  TypeScript: "#3178c6",
-  JavaScript: "#f1e05a",
-  Python: "#3572A5",
-  Java: "#b07219",
-  C: "#555555",
-  "C++": "#f34b7d",
-  "C#": "#178600",
-  Go: "#00ADD8",
-  Rust: "#dea584",
-  Ruby: "#701516",
-  PHP: "#4F5D95",
-  Swift: "#F05138",
-  Kotlin: "#A97BFF",
-  Dockerfile: "#384d54",
-  Shell: "#89e051",
-  HTML: "#e34c26",
-  CSS: "#563d7c",
-  R: "#198CE7",
-  "Jupyter Notebook": "#DA5B0B",
-  COBOL: "#008080",
+// Cuatro tonos, todos por debajo del 80% de saturación y separados del acento en
+// tono. Los 20 colores de GitHub Linguist producían un arcoíris junto al ámbar.
+const LANG_TONES = {
+  accent: "#e7a240", // H 35
+  violet: "#b28dc4", // H 280
+  cyan: "#81a8bb", // H 200
+  neutral: "#75758a", // H 240, la familia de grises del tema
+} as const;
+
+const LANG_COLORS: Record<string, keyof typeof LANG_TONES> = {
+  TypeScript: "cyan",
+  JavaScript: "cyan",
+  Python: "accent",
+  Java: "violet",
+  Shell: "violet",
 };
 
 function langColor(lang: string | null): string {
-  if (!lang) return "#8b8b8b";
-  return LANG_COLORS[lang] ?? "#ef9f4a";
+  if (!lang) return LANG_TONES.neutral;
+  return LANG_TONES[LANG_COLORS[lang] ?? "neutral"];
 }
 
 function repoDescription(repo: Repo): string {
   if (repo.description && repo.description.trim().length > 0) return repo.description;
   if (Array.isArray(repo.topics) && repo.topics.length > 0) {
-    return `Exploring ${repo.topics.slice(0, 2).join(" and ")} in public — details landing soon.`;
+    return `Exploring ${repo.topics.slice(0, 2).join(" and ")} in public. Details landing soon.`;
   }
-  return "Work in progress — check the repository for the latest state.";
+  return "Work in progress. Check the repository for the latest state.";
 }
 
 function Skeleton() {
   return (
     <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-      {[0, 1, 2].map((i) => (
+      {[0, 1, 2, 3].map((i) => (
         <div
           key={i}
-          className="relative h-56 overflow-hidden rounded-2xl border border-surface-border bg-surface-raised"
+          className="relative min-h-[13rem] overflow-hidden rounded-card border border-surface-border bg-surface-raised"
         >
           <div className="absolute inset-0 animate-pulse bg-gradient-to-br from-surface-raised via-surface-2 to-surface-raised" />
           <div className="absolute inset-0 p-6">
-            <div className="h-4 w-2/3 animate-pulse rounded-full bg-surface-2 mb-4" />
-            <div className="h-3 w-full animate-pulse rounded-full bg-surface-2 mb-2" />
-            <div className="h-3 w-4/5 animate-pulse rounded-full bg-surface-2" />
+            <div className="mb-4 h-4 w-2/3 animate-pulse rounded-full bg-surface-2" />
+            <div className="mb-2 h-3 w-full animate-pulse rounded-full bg-surface-2" />
+            <div className="mb-2 h-3 w-4/5 animate-pulse rounded-full bg-surface-2" />
+            <div className="h-3 w-2/3 animate-pulse rounded-full bg-surface-2" />
           </div>
         </div>
       ))}
@@ -122,7 +117,17 @@ function readCache(): Repo[] | null {
     if (!raw) return null;
     const parsed = JSON.parse(raw) as { ts: number; data: Repo[] };
     if (Date.now() - parsed.ts > CACHE_TTL) return null;
-    return Array.isArray(parsed.data) && parsed.data.length > 0 ? parsed.data : null;
+    if (!Array.isArray(parsed.data) || parsed.data.length === 0) return null;
+    // Validar cada elemento: un null o un primitivo dentro del array provoca un
+    // TypeError en el render y deja la página en blanco.
+    const valid = parsed.data.filter(
+      (r): r is Repo =>
+        !!r &&
+        typeof r === "object" &&
+        typeof r.name === "string" &&
+        typeof r.html_url === "string",
+    );
+    return valid.length > 0 ? valid : null;
   } catch {
     return null;
   }
@@ -130,7 +135,20 @@ function readCache(): Repo[] | null {
 
 function writeCache(repos: Repo[]) {
   try {
-    localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), data: repos }));
+    // Persistir solo los campos que se usan, no los 80+ que devuelve la API.
+    const slim = repos.map((r) => ({
+      id: r.id,
+      name: r.name,
+      description: r.description,
+      html_url: r.html_url,
+      stargazers_count: r.stargazers_count,
+      forks_count: r.forks_count,
+      language: r.language,
+      topics: r.topics,
+      fork: r.fork,
+      size: r.size,
+    }));
+    localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), data: slim }));
   } catch {
     // storage unavailable (private mode, quota); skip
   }
@@ -149,16 +167,13 @@ interface Card {
 }
 
 export function Projects() {
-  const [repos, setRepos] = useState<Repo[]>(() => {
-    if (typeof window === "undefined") return [];
-    return readCache() ?? [];
-  });
-  const [loading, setLoading] = useState(() => repos.length === 0);
+  const [repos, setRepos] = useState<Repo[]>(() => readCache() ?? []);
+  const [loading, setLoading] = useState(repos.length === 0);
   const [shouldFetch, setShouldFetch] = useState(false);
+  const [fetchError, setFetchError] = useState(false);
   const reduce = useReducedMotion();
-  const scope = useRef<HTMLDivElement>(null);
 
-  useGSAP((gsap) => {
+  const scope = useGSAP<HTMLElement>((gsap) => {
     if (reduce || loading) return;
     gsap.fromTo(
       ".proj-card",
@@ -191,37 +206,54 @@ export function Projects() {
     return () => observer.disconnect();
   }, [repos.length]);
 
+  // El timeout se monta siempre, no solo cuando la red responde ni cuando la seccion
+  // entra en el viewport: si el observer nunca dispara o el fetch se cuelga, el
+  // skeleton tiene que resolverse igualmente.
+  useEffect(() => {
+    if (!loading) return;
+    const timer = setTimeout(() => setLoading(false), 5000);
+    return () => clearTimeout(timer);
+  }, [loading]);
+
   useEffect(() => {
     if (!shouldFetch) return;
 
+    const controller = new AbortController();
     let cancelled = false;
-    const timer = setTimeout(() => {
-      if (!cancelled) setLoading(false);
-    }, 5000);
 
-    fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=100`)
-      .then((r) => (r.ok ? r.json() : null))
+    fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=100`, {
+      signal: controller.signal,
+      headers: { Accept: "application/vnd.github+json" },
+    })
+      .then(async (r) => {
+        if (!r.ok) throw new Error(`GitHub API ${r.status}`);
+        const data: unknown = await r.json();
+        if (!Array.isArray(data)) throw new Error("Unexpected payload shape");
+        return data as Repo[];
+      })
       .then((data) => {
         if (cancelled) return;
-        if (Array.isArray(data) && data.length > 0) {
-          const filtered = (data as Repo[]).filter((r) => !r.fork);
-          if (filtered.length > 0) {
-            setRepos(filtered);
-            writeCache(filtered);
-          }
+        const filtered = data.filter((r) => r && typeof r === "object" && !r.fork);
+        if (filtered.length > 0) {
+          setRepos(filtered);
+          writeCache(filtered);
+        } else {
+          setFetchError(true);
         }
       })
-      .catch(() => {})
+      .catch((err: unknown) => {
+        if (cancelled || (err instanceof DOMException && err.name === "AbortError")) return;
+        // 403 rate-limit, 404, 5xx y error de red llegan aquí: hay que distinguirlo
+        // del "no había repos" para no dejar al visitante con un portfolio vacío.
+        setFetchError(true);
+      })
       .finally(() => {
-        if (!cancelled) {
-          setLoading(false);
-          clearTimeout(timer);
-        }
+        if (!cancelled) setLoading(false);
       });
 
     return () => {
       cancelled = true;
-      clearTimeout(timer);
+      controller.abort();
     };
   }, [shouldFetch]);
 
@@ -243,7 +275,7 @@ export function Projects() {
   const others: Card[] = repos
     .filter((r) => !FEATURED.some((f) => f.name === r.name))
     .filter((r) => !EXCLUDED_NAMES.has(r.name))
-    .filter((r) => r.size > 0 && r.description && r.description.trim().length > 3)
+    .filter((r) => (r.size ?? 0) > 0 && r.description && r.description.trim().length > 3)
     .slice(0, 6)
     .map((r) => ({
       id: `repo-${r.id}`,
@@ -256,13 +288,11 @@ export function Projects() {
       topics: r.topics ?? [],
       featured: false,
     }));
-  const cards = [...featured, ...others];
-
   return (
-    <section ref={scope} id="projects" className="relative scroll-mt-24 border-t border-surface-border py-24 md:py-36">
-      <div className="mx-auto max-w-6xl px-6">
-        <div className="mb-12 flex items-end justify-between gap-6">
-          <h2 className="text-2xl font-bold tracking-tight text-text-primary md:text-3xl">
+    <section ref={scope} id="projects" className="relative scroll-mt-24 border-t border-surface-border py-24 md:py-40">
+      <div className="mx-auto w-full max-w-[80rem] px-6 sm:px-8 lg:px-12">
+        <div className="mb-14 flex items-end justify-between gap-6">
+          <h2 className="text-h2 font-bold tracking-tight text-text-primary">
             Projects
           </h2>
           <span className="hidden font-mono text-xs text-text-muted sm:inline">
@@ -273,81 +303,120 @@ export function Projects() {
         {loading ? (
           <Skeleton />
         ) : (
-          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {cards.map((repo, i) => {
-              const color = langColor(repo.language);
-              const isWide = i === 0;
-              return (
+          <div>
+            <div className="grid gap-5 md:grid-cols-2">
+              {featured.map((repo) => {
+                const color = langColor(repo.language);
+                return (
+                  <a
+                    key={repo.id}
+                    href={repo.html_url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="proj-card group relative flex flex-col overflow-hidden rounded-card border border-surface-border bg-surface-raised p-7 transition-all duration-300 ease-out-expo hover:-translate-y-1 hover:border-accent/30"
+                  >
+                    <div className="mb-4 flex items-start justify-between gap-3">
+                      <div className="flex min-w-0 items-center gap-3">
+                        <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: color }} />
+                        <h3 className="truncate font-mono text-sm font-bold text-text-primary transition-colors group-hover:text-accent">
+                          {repo.name}
+                        </h3>
+                      </div>
+                    </div>
+
+                    <p className="mb-5 flex-1 text-sm leading-relaxed text-text-secondary line-clamp-4 md:text-[0.9375rem]">
+                      {repo.description}
+                    </p>
+
+                    {repo.topics && repo.topics.length > 0 && (
+                      <div className="mb-4 mt-auto flex flex-wrap gap-1.5">
+                        {repo.topics.slice(0, 2).map((topic) => (
+                          <span
+                            key={topic}
+                            className="rounded-pill bg-accent-muted px-2 py-0.5 font-mono text-micro text-accent-soft"
+                          >
+                            {topic}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+
+                    <div className="mt-auto flex items-center gap-4 border-t border-surface-border/60 pt-4 text-xs text-text-muted">
+                      <span className="flex items-center gap-1">
+                        <Star className="h-3 w-3" weight="regular" /> {repo.stargazers_count}
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <GitFork className="h-3 w-3" weight="regular" /> {repo.forks_count}
+                      </span>
+                    </div>
+                  </a>
+                );
+              })}
+            </div>
+
+            {others.length > 0 && (
+              <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {others.map((repo) => {
+                  const color = langColor(repo.language);
+                  return (
+                    <a
+                      key={repo.id}
+                      href={repo.html_url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="proj-card group relative flex flex-col overflow-hidden rounded-card border border-surface-border bg-surface-raised p-6 transition-all duration-300 ease-out-expo hover:-translate-y-1 hover:border-accent/30"
+                    >
+                      <div className="mb-4 flex min-w-0 items-center gap-3">
+                        <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: color }} />
+                        <h3 className="truncate font-mono text-sm font-bold text-text-primary transition-colors group-hover:text-accent">
+                          {repo.name}
+                        </h3>
+                      </div>
+
+                      <p className="mb-5 flex-1 text-sm leading-relaxed text-text-secondary line-clamp-4 md:text-[0.9375rem]">
+                        {repo.description}
+                      </p>
+
+                      {repo.topics.length > 0 && (
+                        <div className="mb-4 mt-auto flex flex-wrap gap-1.5">
+                          {repo.topics.slice(0, 2).map((topic) => (
+                            <span
+                              key={topic}
+                              className="rounded-pill bg-accent-muted px-2 py-0.5 font-mono text-micro text-accent-soft"
+                            >
+                              {topic}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+
+                      <div className="mt-auto flex items-center gap-4 border-t border-surface-border/60 pt-4 text-xs text-text-muted">
+                        <span className="flex items-center gap-1">
+                          <Star className="h-3 w-3" weight="regular" /> {repo.stargazers_count}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <GitFork className="h-3 w-3" weight="regular" /> {repo.forks_count}
+                        </span>
+                      </div>
+                    </a>
+                  );
+                })}
+              </div>
+            )}
+
+            {fetchError && (
+              <p className="mt-6 text-sm text-text-secondary">
+                Live GitHub data is unavailable right now, so only the curated projects are shown.{" "}
                 <a
-                  key={repo.id}
-                  href={repo.html_url}
+                  href={`https://github.com/${GITHUB_USERNAME}`}
                   target="_blank"
                   rel="noreferrer"
-                  className={`proj-card group relative flex flex-col overflow-hidden rounded-2xl border border-surface-border bg-surface-raised p-6 pr-4 transition-all duration-300 hover:-translate-y-1 hover:border-accent/30 hover:shadow-[0_12px_40px_rgba(0,0,0,0.45)] ${
-                    isWide ? "md:col-span-2" : ""
-                  }`}
+                  className="text-accent underline underline-offset-4 hover:text-accent-soft"
                 >
-                  <div
-                    className="pointer-events-none absolute left-0 top-0 h-full w-px"
-                    style={{ background: `linear-gradient(to bottom, transparent, ${color}66, transparent)` }}
-                  />
-                  <div className="mb-4 flex items-start justify-between gap-3">
-                    <div className="flex items-center gap-3 min-w-0">
-                      <span
-                        className="h-3 w-3 shrink-0 rounded-full"
-                        style={{ backgroundColor: color }}
-                      />
-                      <h3 className="truncate font-mono text-sm font-bold text-text-primary transition-colors group-hover:text-accent">
-                        {repo.name}
-                      </h3>
-                    </div>
-                    <div className="flex shrink-0 items-center gap-3">
-                      {repo.featured && (
-                        <span className="rounded-full bg-accent-muted px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-accent-soft">
-                          ✦ curated
-                        </span>
-                      )}
-                      <ArrowSquareOut
-                        className="h-4 w-4 text-text-muted transition-colors group-hover:text-accent"
-                        weight="regular"
-                      />
-                    </div>
-                  </div>
-
-                  <p className="mb-5 flex-1 text-xs leading-relaxed text-text-secondary line-clamp-3">
-                    {repo.description}
-                  </p>
-
-                  {repo.topics && repo.topics.length > 0 && (
-                    <div className="mb-4 flex flex-wrap gap-1.5">
-                      {repo.topics.slice(0, 3).map((topic) => (
-                        <span
-                          key={topic}
-                          className="rounded-full bg-accent-muted px-2 py-0.5 font-mono text-[10px] text-accent-soft"
-                        >
-                          {topic}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-
-                  <div className="flex items-center gap-4 border-t border-surface-border/60 pt-4 text-xs text-text-muted">
-                    {repo.language && (
-                      <span className="flex items-center gap-1.5 font-mono text-[11px]">
-                        <span className="h-2 w-2 rounded-full" style={{ backgroundColor: color }} />
-                        {repo.language}
-                      </span>
-                    )}
-                    <span className="flex items-center gap-1">
-                      <Star className="h-3 w-3" weight="regular" /> {repo.stargazers_count}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <GitFork className="h-3 w-3" weight="regular" /> {repo.forks_count}
-                    </span>
-                  </div>
+                  Browse all repos
                 </a>
-              );
-            })}
+              </p>
+            )}
           </div>
         )}
 
@@ -360,7 +429,7 @@ export function Projects() {
             className="group inline-flex items-center gap-1 font-mono text-xs text-text-secondary transition-colors hover:text-accent"
           >
             github.com/{GITHUB_USERNAME}
-            <ArrowSquareOut className="h-3 w-3 transition-transform group-hover:translate-x-0.5" weight="regular" />
+            <span className="sr-only">opens in new tab</span>
           </a>
         </div>
       </div>

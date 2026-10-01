@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { motion, useMotionValueEvent, useReducedMotion, useScroll } from "motion/react";
+import { AnimatePresence, motion, useMotionValueEvent, useReducedMotion, useScroll } from "motion/react";
 import { List, X, GithubLogo, LinkedinLogo, EnvelopeSimple } from "@phosphor-icons/react";
 
 const NAV_ITEMS = [
@@ -17,14 +17,49 @@ export function Navbar() {
   const reduce = useReducedMotion();
   const sectionIds = useRef(NAV_ITEMS.map((i) => i.href));
   const { scrollY } = useScroll();
+  const toggleRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   useMotionValueEvent(scrollY, "change", (y) => setScrolled(y > 24));
 
   useEffect(() => {
     if (!open) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
+
+    const focusable = () => {
+      const menu = menuRef.current;
+      if (!menu) return [] as HTMLElement[];
+      return Array.from(
+        menu.querySelectorAll<HTMLElement>('a[href], button:not([disabled])'),
+      ).filter((el) => el.offsetParent !== null);
     };
+
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setOpen(false);
+        // Devolver el foco al botón que abrió el menú: si no, cae a <body> y el
+        // usuario de teclado pierde su sitio en el documento.
+        toggleRef.current?.focus();
+        return;
+      }
+      if (e.key !== "Tab") return;
+
+      // Focus trap: sin esto el foco escapa del overlay y aterriza en el contenido
+      // de main, que está detrás y no se puede leer con body bloqueado.
+      const items = focusable();
+      if (items.length === 0) return;
+      const first = items[0];
+      const last = items[items.length - 1];
+      const current = document.activeElement;
+
+      if (e.shiftKey && (current === first || !menuRef.current?.contains(current))) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && (current === last || !menuRef.current?.contains(current))) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
     document.addEventListener("keydown", onKey);
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
@@ -37,9 +72,15 @@ export function Navbar() {
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) setActive(`#${entry.target.id}`);
-        });
+        // Ninguna sección visible significa que el usuario está en el hero: hay que
+        // limpiar active o aria-current se queda obsoleto.
+        if (entries.some((entry) => entry.isIntersecting)) {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) setActive(`#${entry.target.id}`);
+          });
+        } else if (window.scrollY < 100) {
+          setActive("");
+        }
       },
       { rootMargin: "-45% 0px -50% 0px" },
     );
@@ -54,14 +95,14 @@ export function Navbar() {
 
   return (
     <header
-      className={`sticky top-0 z-50 border-b transition-all duration-300 ${
+      className={`sticky top-0 z-50 border-b transition-all duration-300 ease-out-expo ${
         scrolled
           ? "border-surface-border/60 bg-surface/90 backdrop-blur-xl"
           : "border-transparent bg-transparent"
       }`}
     >
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-        <a href="#" className="group font-mono text-lg font-bold tracking-tight text-accent">
+      <div className="mx-auto flex w-full max-w-[80rem] items-center justify-between px-6 py-4 sm:px-8 lg:px-12">
+        <a href="#main" className="group font-mono text-lg font-bold tracking-tight text-accent">
           AB
           <span className="inline-block transition-transform duration-300 group-hover:translate-y-[-2px]">_</span>
         </a>
@@ -78,7 +119,7 @@ export function Navbar() {
             >
               {item.label}
               <span
-                className={`absolute -bottom-1 left-0 h-px bg-accent transition-all duration-300 ${
+                className={`absolute -bottom-1 left-0 h-px bg-accent transition-all duration-300 ease-out-expo ${
                   active === item.href ? "w-full" : "w-0"
                 }`}
               />
@@ -115,6 +156,8 @@ export function Navbar() {
         </div>
 
         <button
+          ref={toggleRef}
+          type="button"
           className="text-accent md:hidden"
           onClick={() => setOpen(!open)}
           aria-label="Toggle menu"
@@ -125,39 +168,43 @@ export function Navbar() {
         </button>
       </div>
 
-      {open && (
-        <motion.div
-          id="mobile-menu"
-          initial={reduce ? false : { opacity: 0, y: -8 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={reduce ? undefined : { opacity: 0, y: -8 }}
-          className="border-t border-surface-border bg-surface px-6 py-6 md:hidden"
-        >
-          <nav className="flex flex-col gap-5 font-mono text-sm uppercase tracking-widest">
-            {NAV_ITEMS.map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                onClick={() => setOpen(false)}
-                className="transition-colors hover:text-accent"
-              >
-                {item.label}
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            id="mobile-menu"
+            ref={menuRef}
+            initial={reduce ? false : { opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={reduce ? undefined : { opacity: 0, y: -8 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className="border-t border-surface-border bg-surface px-6 py-6 md:hidden"
+          >
+            <nav className="flex flex-col gap-5 font-mono text-sm uppercase tracking-widest">
+              {NAV_ITEMS.map((item) => (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setOpen(false)}
+                  className="transition-colors hover:text-accent"
+                >
+                  {item.label}
+                </a>
+              ))}
+            </nav>
+            <div className="mt-6 flex gap-5 border-t border-surface-border pt-5">
+              <a href="https://www.linkedin.com/in/alejandroblancojimenez/" target="_blank" rel="noreferrer" aria-label="LinkedIn">
+                <LinkedinLogo className="h-5 w-5 text-text-secondary" weight="regular" />
               </a>
-            ))}
-          </nav>
-          <div className="mt-6 flex gap-5 border-t border-surface-border pt-5">
-            <a href="https://www.linkedin.com/in/alejandroblancojimenez/" target="_blank" rel="noreferrer" aria-label="LinkedIn">
-              <LinkedinLogo className="h-5 w-5 text-text-secondary" weight="regular" />
-            </a>
-            <a href="https://github.com/Ghostalex07" target="_blank" rel="noreferrer" aria-label="GitHub">
-              <GithubLogo className="h-5 w-5 text-text-secondary" weight="regular" />
-            </a>
-            <a href="mailto:Alejandro.bj007@gmail.com" aria-label="Email">
-              <EnvelopeSimple className="h-5 w-5 text-text-secondary" weight="regular" />
-            </a>
-          </div>
-        </motion.div>
-      )}
+              <a href="https://github.com/Ghostalex07" target="_blank" rel="noreferrer" aria-label="GitHub">
+                <GithubLogo className="h-5 w-5 text-text-secondary" weight="regular" />
+              </a>
+              <a href="mailto:Alejandro.bj007@gmail.com" aria-label="Email">
+                <EnvelopeSimple className="h-5 w-5 text-text-secondary" weight="regular" />
+              </a>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 }

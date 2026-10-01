@@ -1,25 +1,33 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { LinkedinLogo, ArrowUpRight, Copy, Check } from "@phosphor-icons/react";
 
 const EMAIL = "Alejandro.bj007@gmail.com";
 
 export function Footer() {
   const [copied, setCopied] = useState(false);
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Un solo temporizador vivo: dos clicks creates dos timers y el primero resetea
+  // el estado antes de tiempo.
+  useEffect(() => () => {
+    if (timer.current) clearTimeout(timer.current);
+  }, []);
 
   const copyEmail = async () => {
     try {
       await navigator.clipboard.writeText(EMAIL);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      if (timer.current) clearTimeout(timer.current);
+      timer.current = setTimeout(() => setCopied(false), 2000);
     } catch {
       // clipboard unavailable; mailto link below still works
     }
   };
 
   return (
-    <footer className="relative border-t border-surface-border py-20 md:py-28">
+    <footer className="relative border-t border-surface-border py-24 md:py-32">
       <div className="pointer-events-none absolute left-1/2 top-0 h-px w-2/3 -translate-x-1/2 bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
-      <div className="mx-auto max-w-6xl px-6">
+      <div className="mx-auto w-full max-w-[80rem] px-6 sm:px-8 lg:px-12">
         <div className="flex flex-col gap-12">
           <div>
             <h2 className="text-balance text-3xl font-bold leading-tight tracking-tight md:text-5xl">
@@ -32,7 +40,7 @@ export function Footer() {
                 type="button"
                 onClick={copyEmail}
                 aria-label={copied ? "Email copied" : "Copy email address"}
-                className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs transition-colors ${
+                className={`inline-flex items-center gap-1.5 rounded-pill border px-3 py-1 text-xs transition-colors ${
                   copied
                     ? "border-accent/50 text-accent"
                     : "border-surface-border text-text-muted hover:border-accent/40 hover:text-accent"
@@ -96,7 +104,7 @@ export function Footer() {
             </div>
           </div>
 
-          <div className="flex flex-col gap-3 border-t border-surface-border pt-8 font-mono text-[10px] uppercase tracking-widest text-text-muted sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-3 border-t border-surface-border pt-8 font-mono text-micro uppercase tracking-widest text-text-muted sm:flex-row sm:items-center sm:justify-between">
             <span>&copy; {new Date().getFullYear()} Alejandro Blanco</span>
             <span className="flex items-center gap-2">
               <LinkedinLogo className="h-3 w-3" weight="regular" />

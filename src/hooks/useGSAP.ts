@@ -8,24 +8,28 @@ type ScrollTriggerCore = typeof ScrollTriggerApi;
 
 gsapApi.registerPlugin(ScrollTriggerApi);
 
-export function useGSAP(
-  setup: (gsap: GSAPCore, ScrollTrigger: ScrollTriggerCore) => void | (() => void),
+export function useGSAP<T extends HTMLElement = HTMLElement>(
+  setup: (gsap: GSAPCore, ScrollTrigger: ScrollTriggerCore) => void,
   deps: DependencyList = [],
 ) {
-  const ref = useRef<HTMLElement>(null);
+  const ref = useRef<T>(null);
   const setupRef = useRef(setup);
   setupRef.current = setup;
 
   useEffect(() => {
+    // gsap.context() lee ref.current de forma lazy, dentro del closure: para cuando
+    // corre el effect el ref ya está adjunto al DOM.
     const ctx = gsapApi.context(() => {
       setupRef.current(gsapApi, ScrollTriggerApi);
     }, ref);
 
     return () => {
+      // ctx.revert() ya mata los tweens y ScrollTrigger creados dentro del contexto.
+      // NO usar ScrollTrigger.getAll().forEach(st => st.kill()): eso destruye los
+      // triggers del resto del documento y deja los elementos en su estado inicial.
       ctx.revert();
-      ScrollTriggerApi.getAll().forEach((st) => st.kill());
     };
   }, deps);
 
-  return ref as RefObject<HTMLElement>;
+  return ref as RefObject<T>;
 }

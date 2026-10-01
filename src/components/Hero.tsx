@@ -1,13 +1,13 @@
 import { motion, useReducedMotion } from "motion/react";
 import { useGSAP } from "../hooks/useGSAP";
-import { ArrowDown } from "@phosphor-icons/react";
+import { ArrowRight } from "@phosphor-icons/react";
 
 const STACK = ["Python", "Java", "C", "Azure", "Linux", "Docker"];
 
 export function Hero() {
   const reduce = useReducedMotion();
 
-  useGSAP((gsap) => {
+  const scope = useGSAP<HTMLElement>((gsap) => {
     if (reduce) return;
 
     const tl = gsap.timeline({ defaults: { ease: "power4.out" } });
@@ -44,10 +44,10 @@ export function Hero() {
   }, [reduce]);
 
   return (
-    <section className="relative flex min-h-[100dvh] items-center justify-center overflow-hidden pb-16 pt-24">
+    <section ref={scope} className="relative flex min-h-[100dvh] items-center justify-center overflow-hidden pb-16 pt-24">
       <div className="pointer-events-none absolute inset-x-0 top-0 h-64 bg-[radial-gradient(60%_100%_at_50%_0%,rgba(240,166,60,0.06),transparent)]" />
 
-      <div className="mx-auto w-full max-w-6xl px-6">
+      <div className="mx-auto w-full max-w-[80rem] px-6 sm:px-8 lg:px-12">
         <div className="grid items-center gap-14 lg:grid-cols-[1.15fr_0.85fr]">
           <div>
             <p className="hero-kicker mb-7 font-mono text-xs uppercase tracking-[0.28em] text-accent md:text-sm">
@@ -71,15 +71,15 @@ export function Hero() {
             <div className="mt-9 flex flex-wrap items-center gap-4">
               <motion.a
                 href="#projects"
-                className="hero-cta inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 font-mono text-sm font-medium text-surface transition-all hover:brightness-110 active:translate-y-px"
+                className="hero-cta inline-flex items-center gap-2 rounded-pill bg-accent px-6 py-3 font-mono text-sm font-medium text-surface transition-all hover:brightness-110 active:translate-y-px"
                 whileTap={{ scale: 0.97 }}
               >
                 See my work
-                <ArrowDown className="h-4 w-4" weight="bold" />
+                <ArrowRight className="h-4 w-4" weight="bold" />
               </motion.a>
               <motion.a
                 href="#about"
-                className="hero-cta inline-flex items-center gap-2 rounded-full border border-surface-border px-6 py-3 font-mono text-sm text-text-secondary transition-all hover:border-accent/40 hover:text-accent active:translate-y-px"
+                className="hero-cta inline-flex items-center gap-2 rounded-pill border border-surface-border px-6 py-3 font-mono text-sm text-text-secondary transition-all hover:border-accent/40 hover:text-accent active:translate-y-px"
                 whileTap={{ scale: 0.97 }}
               >
                 More about me
@@ -87,8 +87,8 @@ export function Hero() {
             </div>
           </div>
 
-          <div className="hero-card ring-chrome rounded-xl border border-surface-border/80 bg-surface-raised p-5 lg:justify-self-end lg:w-[17rem]">
-            <p className="mb-4 font-mono text-[10px] uppercase tracking-[0.28em] text-text-muted">
+          <div className="hero-card rounded-card border border-surface-border/80 bg-surface-raised p-5 lg:justify-self-stretch xl:max-w-[19rem] xl:justify-self-end">
+            <p className="mb-4 font-mono text-micro uppercase tracking-[0.28em] text-text-muted">
               {"//"} status
             </p>
 
@@ -100,21 +100,21 @@ export function Hero() {
                 </span>
                 Intern at DIGITAL55
               </span>
-              <span className="font-mono text-[10px] uppercase tracking-wider text-text-muted">now</span>
+              <span className="font-mono text-micro uppercase tracking-wider text-text-muted">now</span>
             </div>
 
             <div className="my-4 h-px w-full bg-surface-border/70" />
 
             <dl className="space-y-3 text-sm">
               <div className="flex items-baseline justify-between gap-4">
-                <dt className="font-mono text-[10px] uppercase tracking-wider text-text-muted">Focus</dt>
+                <dt className="font-mono text-micro uppercase tracking-wider text-text-muted">Focus</dt>
                 <dd className="font-medium text-text-primary">Cybersecurity</dd>
               </div>
               <div className="flex items-baseline justify-between gap-4">
-                <dt className="font-mono text-[10px] uppercase tracking-wider text-text-muted">Study</dt>
+                <dt className="font-mono text-micro uppercase tracking-wider text-text-muted">Study</dt>
                 <dd className="text-right font-medium text-text-primary">
                   B.Sc. Computer Engineering
-                  <span className="mt-0.5 block font-mono text-[10px] uppercase tracking-wider text-text-muted">
+                  <span className="mt-0.5 block font-mono text-micro uppercase tracking-wider text-text-muted">
                     UNIE - Madrid, 2023-2027
                   </span>
                 </dd>
@@ -127,7 +127,7 @@ export function Hero() {
               {STACK.map((tool) => (
                 <span
                   key={tool}
-                  className="rounded-full border border-surface-border/80 px-2.5 py-0.5 font-mono text-[10px] text-text-secondary"
+                  className="rounded-pill border border-surface-border/80 px-2.5 py-0.5 font-mono text-micro text-text-secondary"
                 >
                   {tool}
                 </span>

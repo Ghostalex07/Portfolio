@@ -1,4 +1,3 @@
-import { useRef } from "react";
 import { useReducedMotion } from "motion/react";
 import { useGSAP } from "../hooks/useGSAP";
 
@@ -30,9 +29,8 @@ const EXPERIENCE = [
 
 export function Experience() {
   const reduce = useReducedMotion();
-  const scope = useRef<HTMLDivElement>(null);
 
-  useGSAP((gsap) => {
+  const scope = useGSAP<HTMLElement>((gsap) => {
     if (reduce) return;
     gsap.fromTo(
       ".exp-item",
@@ -49,10 +47,10 @@ export function Experience() {
   }, [reduce]);
 
   return (
-    <section ref={scope} id="experience" className="relative scroll-mt-24 py-24 md:py-36">
-      <div className="mx-auto max-w-6xl px-6">
-        <div className="mb-12">
-          <h2 className="text-2xl font-bold tracking-tight text-text-primary md:text-3xl">
+    <section ref={scope} id="experience" className="relative scroll-mt-24 py-20 md:py-28">
+      <div className="mx-auto w-full max-w-[80rem] px-6 sm:px-8 lg:px-12">
+        <div className="mb-10">
+          <h2 className="text-h2-sm font-bold tracking-tight text-text-primary">
             Experience
           </h2>
         </div>
@@ -61,7 +59,7 @@ export function Experience() {
           <span className="absolute bottom-0 top-1.5 left-[7px] w-px bg-surface-border" />
 
           <div className="space-y-16">
-            {EXPERIENCE.map((job, i) => (
+            {EXPERIENCE.map((job) => (
               <article key={job.role} className="exp-item relative pl-10 md:pl-12">
                 <span
                   className={`absolute left-[7px] top-[7px] h-[13px] w-[13px] -translate-x-1/2 rounded-full border-2 ${
@@ -72,10 +70,10 @@ export function Experience() {
                 />
 
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                  <h3 className="text-2xl font-bold tracking-tight text-text-primary">
+                  <h3 className="text-h3 font-bold tracking-tight text-text-primary">
                     {job.role}
                     {job.current && (
-                      <span className="ml-3 inline-flex translate-y-[-2px] items-center gap-1.5 rounded-full bg-accent-muted px-2.5 py-0.5 align-middle font-mono text-[10px] uppercase tracking-wider text-accent">
+                      <span className="ml-3 inline-flex translate-y-[-2px] items-center gap-1.5 rounded-pill bg-accent-muted px-2.5 py-0.5 align-middle font-mono text-micro uppercase tracking-wider text-accent">
                         Currently
                       </span>
                     )}
@@ -86,7 +84,7 @@ export function Experience() {
                   </div>
                 </div>
 
-                <ul className="mt-5 max-w-2xl space-y-3">
+                <ul className="mt-5 max-w-[68ch] space-y-3">
                   {job.points.map((point) => (
                     <li key={point} className="flex gap-3 text-sm leading-relaxed text-text-secondary md:text-base">
                       <span className="mt-0.5 text-accent">→</span>
@@ -99,7 +97,7 @@ export function Experience() {
                   {job.stack.map((tag) => (
                     <span
                       key={tag}
-                      className="rounded-full border border-surface-border bg-surface-raised px-3 py-1 font-mono text-[11px] text-text-secondary"
+                      className="rounded-pill border border-surface-border bg-surface-raised px-3 py-1 font-mono text-micro text-text-secondary"
                     >
                       {tag}
                     </span>

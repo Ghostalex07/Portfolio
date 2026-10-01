@@ -1,4 +1,3 @@
-import { useRef } from "react";
 import { Shield, Trophy, CloudArrowUp, Brain, Certificate, Medal } from "@phosphor-icons/react";
 import { useReducedMotion } from "motion/react";
 import { useGSAP } from "../hooks/useGSAP";
@@ -16,11 +15,10 @@ const CERTIFICATIONS = [
 
 export function Certifications() {
   const reduce = useReducedMotion();
-  const scope = useRef<HTMLDivElement>(null);
   const featured = CERTIFICATIONS.filter((c) => c.featured);
   const rest = CERTIFICATIONS.filter((c) => !c.featured);
 
-  useGSAP((gsap) => {
+  const scope = useGSAP<HTMLElement>((gsap) => {
     if (reduce) return;
     gsap.fromTo(
       ".cert-reveal",
@@ -37,10 +35,10 @@ export function Certifications() {
   }, [reduce]);
 
   return (
-    <section ref={scope} id="certs" className="relative scroll-mt-24 border-t border-surface-border py-24 md:py-36">
-      <div className="mx-auto max-w-6xl px-6">
-        <div className="mb-12 flex items-end justify-between gap-6">
-          <h2 className="text-2xl font-bold tracking-tight text-text-primary md:text-3xl">
+    <section ref={scope} id="certs" className="relative scroll-mt-24 border-t border-surface-border py-16 md:py-24">
+      <div className="mx-auto w-full max-w-[80rem] px-6 sm:px-8 lg:px-12">
+        <div className="mb-8 flex items-end justify-between gap-6">
+          <h2 className="text-h2-sm font-bold tracking-tight text-text-primary">
             Certifications
           </h2>
           <span className="hidden font-mono text-xs text-text-muted sm:inline">
@@ -48,19 +46,19 @@ export function Certifications() {
           </span>
         </div>
 
-        <div className="mb-8 grid gap-5 md:grid-cols-2">
+        <div className="grid gap-5 md:grid-cols-2">
           {featured.map((cert) => (
             <div
               key={cert.title}
-              className="cert-reveal group relative overflow-hidden rounded-2xl border border-surface-border bg-surface-raised p-7 ring-chrome transition-colors hover:border-accent/30"
+              className="cert-reveal group relative overflow-hidden rounded-card border border-surface-border bg-surface-raised p-7 transition-colors hover:border-accent/30"
             >
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-4">
-                  <div className="rounded-xl bg-accent-muted p-3">
+                  <div className="rounded-chip bg-accent-muted p-3">
                     <cert.icon className="h-5 w-5 text-accent" weight="fill" />
                   </div>
                   <div>
-                    <p className="font-mono text-[11px] uppercase tracking-wider text-accent-soft">
+                    <p className="font-mono text-micro uppercase tracking-wider text-accent-soft">
                       {cert.issuer}
                     </p>
                     <h3 className="mt-1 text-lg font-bold text-text-primary">{cert.title}</h3>
@@ -71,18 +69,18 @@ export function Certifications() {
           ))}
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-x-8 border-t border-surface-border sm:grid-cols-2 lg:grid-cols-3">
           {rest.map((cert) => (
             <div
               key={cert.title}
-              className="cert-reveal flex flex-col justify-between rounded-2xl border border-surface-border bg-surface-raised p-5 transition-colors hover:border-accent/30"
+              className="cert-reveal flex items-start gap-4 border-b border-surface-border py-5 pr-6"
             >
-              <cert.icon className="h-5 w-5 text-accent" weight="regular" />
-              <div className="mt-6">
-                <p className="font-mono text-[10px] uppercase tracking-wider text-text-muted">
+              <cert.icon className="mt-0.5 h-5 w-5 shrink-0 text-accent" weight="regular" />
+              <div>
+                <p className="font-mono text-micro uppercase tracking-wider text-text-muted">
                   {cert.issuer}
                 </p>
-                <h4 className="mt-1 text-sm font-bold leading-snug text-text-primary">{cert.title}</h4>
+                <h3 className="mt-1 text-sm font-bold leading-snug text-text-primary">{cert.title}</h3>
               </div>
             </div>
           ))}
