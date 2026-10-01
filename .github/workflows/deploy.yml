@@ -9,7 +9,41 @@ permissions:
   contents: write
 
 jobs:
+  test:
+    name: Tests 🧪
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js ⚙️
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies 📦
+        run: npm install
+
+      - name: Install Playwright browsers 🎭
+        run: npx playwright install --with-deps chromium
+
+      # Los specs corren contra el build de produccion: tests/support/serve.mjs
+      # reconstruye dist/ si las fuentes cambiaron. api.github.com se intercepta,
+      # asi que no hace falta token y los tests no dependen de rate limits.
+      - name: Run tests 🧪
+        run: npm test
+
+      - name: Upload traces on failure 📎
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-traces
+          path: test-results/
+          retention-days: 7
+
   build-and-deploy:
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️
