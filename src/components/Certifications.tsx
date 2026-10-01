@@ -2,6 +2,18 @@ import { Shield, Trophy, CloudArrowUp, Brain, Certificate, Medal } from "@phosph
 import { useReducedMotion } from "motion/react";
 import { useGSAP } from "../hooks/useGSAP";
 
+/**
+ * Certificaciones lee como un libro mayor de titulos, no como otra rejilla de
+ * tarjetas con una destacada. Projects ya es la pieza central con su rejilla de
+ * 2 columnas + 3 columnas; repetirla aqui hacia que las dos secciones se
+ * confundieran en el scroll. Aqui la jerarquia se resuelve con escala y medida:
+ * las dos insignias ocupan filas anchas a tamano display-sm y las seis restantes
+ * caen a filas compactas en dos columnas.
+ *
+ * Sin superficies: son datos, no controles. Un hover sobre una fila que no hace
+ * nada seria una mentira de interactividad.
+ */
+
 const CERTIFICATIONS = [
   { title: "Junior Cybersecurity Analyst", issuer: "Cisco", icon: Trophy, featured: true },
   { title: "AZ-500 · Azure Security", issuer: "Microsoft", icon: Shield, featured: true },
@@ -37,7 +49,7 @@ export function Certifications() {
   return (
     <section ref={scope} id="certs" className="relative scroll-mt-24 border-t border-surface-border py-16 md:py-24">
       <div className="mx-auto w-full max-w-[80rem] px-6 sm:px-8 lg:px-12">
-        <div className="mb-8 flex items-end justify-between gap-6">
+        <div className="mb-10 flex items-end justify-between gap-6">
           <h2 className="text-h2-sm font-bold tracking-tight text-text-primary">
             Certifications
           </h2>
@@ -46,41 +58,43 @@ export function Certifications() {
           </span>
         </div>
 
-        <div className="grid gap-5 md:grid-cols-2">
+        {/* Las dos insignias: filas a ancho completo, sin caja. El peso lo da el
+            tamano del titular, no un contenedor. */}
+        <div className="border-t border-surface-border">
           {featured.map((cert) => (
             <div
               key={cert.title}
-              className="cert-reveal group relative overflow-hidden rounded-card border border-surface-border bg-surface-raised p-7 transition-colors hover:border-accent/30"
+              className="cert-reveal flex items-start gap-5 border-b border-surface-border py-7 md:py-9"
             >
-              <div className="flex items-start justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="rounded-chip bg-accent-muted p-3">
-                    <cert.icon className="h-5 w-5 text-accent" weight="fill" />
-                  </div>
-                  <div>
-                    <p className="font-mono text-micro uppercase tracking-wider text-accent-soft">
-                      {cert.issuer}
-                    </p>
-                    <h3 className="mt-1 text-lg font-bold text-text-primary">{cert.title}</h3>
-                  </div>
-                </div>
+              <cert.icon className="mt-1.5 h-6 w-6 shrink-0 text-accent" weight="fill" />
+              <div>
+                <p className="font-mono text-micro uppercase tracking-wider text-accent-soft">
+                  {cert.issuer}
+                </p>
+                <h3 className="mt-2 max-w-[24ch] text-display-sm font-bold leading-[1.1] tracking-tight text-text-primary">
+                  {cert.title}
+                </h3>
               </div>
             </div>
           ))}
         </div>
 
-        <div className="grid gap-x-8 border-t border-surface-border sm:grid-cols-2 lg:grid-cols-3">
+        {/* Las seis restantes: dos columnas de filas cortas. El paso de las
+            filas anchas a las compactas es el unico acento que hace falta. */}
+        <div className="grid gap-x-12 sm:grid-cols-2">
           {rest.map((cert) => (
             <div
               key={cert.title}
-              className="cert-reveal flex items-start gap-4 border-b border-surface-border py-5 pr-6"
+              className="cert-reveal flex items-start gap-4 border-b border-surface-border py-5"
             >
-              <cert.icon className="mt-0.5 h-5 w-5 shrink-0 text-accent" weight="regular" />
-              <div>
+              <cert.icon className="mt-0.5 h-4 w-4 shrink-0 text-text-muted" weight="regular" />
+              <div className="min-w-0">
                 <p className="font-mono text-micro uppercase tracking-wider text-text-muted">
                   {cert.issuer}
                 </p>
-                <h3 className="mt-1 text-sm font-bold leading-snug text-text-primary">{cert.title}</h3>
+                <h3 className="mt-1 text-sm font-bold leading-snug text-text-primary">
+                  {cert.title}
+                </h3>
               </div>
             </div>
           ))}

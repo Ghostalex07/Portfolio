@@ -54,7 +54,8 @@ export function Hero() {
               {"//"} software &amp; dev
             </p>
 
-            <h1 className="text-[clamp(2.5rem,7vw,5rem)] font-bold leading-[1.02] tracking-tight">
+            {/* El clamp inline era literalmente el token --text-hero sin usar. */}
+            <h1 className="text-hero font-bold leading-[1.02] tracking-tight">
               <span className="block overflow-hidden">
                 <span className="hero-line block">Alejandro</span>
               </span>
